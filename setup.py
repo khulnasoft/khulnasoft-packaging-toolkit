@@ -151,7 +151,7 @@ setup(
             'man/man1/*.1'
         ],
     },
-    data_files=[('', ['LICENSE.txt'])],
+    data_files=[('', ['LICENSE'])],
     install_requires=['semantic_version>=2.5.0', 'future>=0.18.2'],
 
     cmdclass={'install': Install, 'create_symlink': CreateSymlink}
