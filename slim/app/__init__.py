@@ -5,50 +5,44 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from . _configuration import (
+from ._configuration import (
     AppConfiguration,
     AppConfigurationFile,
     AppConfigurationSetting,
-    AppConfigurationStanza
+    AppConfigurationStanza,
 )
-from . _configuration_spec import (
+from ._configuration_spec import (
     AppConfigurationDocumentation,
     AppConfigurationPlacement,
     AppConfigurationSettingDeclaration,
     AppConfigurationSpec,
-    AppConfigurationStanzaDeclaration
+    AppConfigurationStanzaDeclaration,
 )
-from . _configuration_validation_plugin import (
-    AppConfigurationValidationPlugin
-)
-from . _configuration_validator import (
-    AppConfigurationValidator
-)
-from . _deployment import (
+from ._configuration_validation_plugin import AppConfigurationValidationPlugin
+from ._configuration_validator import AppConfigurationValidator
+from ._deployment import (
     AppDependencyGraph,
     AppDeploymentPackage,
-    AppDeploymentSpecification
+    AppDeploymentSpecification,
 )
-from . _installation import (
+from ._installation import (
     AppInstallation,
     AppInstallationAction,
     AppInstallationDependency,
-    AppInstallationGraph
+    AppInstallationGraph,
 )
-from . _manifest import (
+from ._manifest import (
     AppCommonInformationModelInfo,
     AppCommonInformationModelSpec,
     AppDependency,
     AppInputGroup,
     AppManifest,
     AppKhulnasoftReleaseInfo,
-    AppKhulnasoftRequirement
+    AppKhulnasoftRequirement,
 )
-from . _server_class import (
+from ._server_class import (
     AppServerClass,
     AppServerClassCollection,
-    AppServerClassUpdate
+    AppServerClassUpdate,
 )
-from . _source import (
-    AppSource
-)
+from ._source import AppSource

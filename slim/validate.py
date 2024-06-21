@@ -15,8 +15,8 @@ from slim.command import *
 # Argument parser definition
 
 parser = SlimArgumentParser(
-    description='verify an app and its dependencies',
-    epilog='This command assumes the app.manifest file is located within the app source directory.'
+    description="verify an app and its dependencies",
+    epilog="This command assumes the app.manifest file is located within the app source directory.",
 )
 
 parser.add_app_source()
@@ -29,9 +29,9 @@ def main(args):
     validate(args.source, args.repository, args.unreferenced_input_groups)
 
 
-def validate(source, repository=None, unreferenced_input_groups='note', app_only=False):
+def validate(source, repository=None, unreferenced_input_groups="note", app_only=False):
 
-    SlimLogger.step('Validating app at ' + encode_filename(source) + '...')
+    SlimLogger.step("Validating app at " + encode_filename(source) + "...")
 
     # Default repository is set on slim_configuration
     if repository is None:
@@ -52,10 +52,10 @@ def validate(source, repository=None, unreferenced_input_groups='note', app_only
         app_dependency_graph.report_unreferenced_input_groups(unreferenced_input_groups)
         SlimLogger.exit_on_error()
 
-    SlimLogger.information('App validation complete')
+    SlimLogger.information("App validation complete")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # noinspection PyBroadException
     try:
         main(parser.parse_args(sys.argv[1:]))

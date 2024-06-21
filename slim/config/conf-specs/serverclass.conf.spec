@@ -272,7 +272,7 @@ restartKhulnasoftd = true | false
 
 issueReload = true | false
 * If true, triggers a reload of internal processors at the client when a
-  member app or a directly configured app is updated 
+  member app or a directly configured app is updated
 * If you don't want to immediately start using an app that is pushed to a
   client, you should set this to false.
 * defaults to false
@@ -306,7 +306,7 @@ precompressBundles = true | flase
 *   allowSslCompression = false
 *   useHTTPServerCompression = true
 *
-* Deployment Client / server.conf 
+* Deployment Client / server.conf
 *   useHTTPClientCompression = true
 *
 * This option is inherited and available upto the serverclass level (not

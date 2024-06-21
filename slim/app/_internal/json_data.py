@@ -6,8 +6,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from builtins import object
 from abc import ABCMeta, abstractmethod, abstractproperty
-from collections import Iterable, MutableMapping, \
-        MutableSequence, OrderedDict  # pylint: disable=no-name-in-module
+from collections import (
+    Iterable,
+    MutableMapping,
+    MutableSequence,
+    OrderedDict,
+)  # pylint: disable=no-name-in-module
 from itertools import chain
 from numbers import Real
 import os
@@ -16,8 +20,8 @@ from future.utils import with_metaclass
 import semantic_version
 from semantic_version import Version
 
-from ... utils import encode_string
-from ... utils.internal import string
+from ...utils import encode_string
+from ...utils.internal import string
 
 try:
     from lxml.html import builder as e  # pylint: disable=unused-import
@@ -36,7 +40,7 @@ class JsonSchema(object):
 
     """
 
-    __slots__ = ('name', 'definition')
+    __slots__ = ("name", "definition")
 
     # noinspection PyPropertyAccess
     def __init__(self, name, definition):
@@ -53,9 +57,13 @@ class JsonSchema(object):
 
     def to_html(self):
         return e.TABLE(
-            e.CAPTION('JSON Schema: ', self.name),
+            e.CAPTION("JSON Schema: ", self.name),
             e.TR(
-                e.TH('member'), e.TH('type'), e.TH('default'), e.TH('required'), e.TH('description')
+                e.TH("member"),
+                e.TH("type"),
+                e.TH("default"),
+                e.TH("required"),
+                e.TH("description"),
             ),
             *tuple(chain.from_iterable(self.definition.data_type.to_html(None)))
         )
@@ -82,11 +90,13 @@ class JsonValue(object):
 
     """
 
-    __slots__ = ('data_type', 'converter', 'default', 'required', 'version')
+    __slots__ = ("data_type", "converter", "default", "required", "version")
 
     # noinspection PyPropertyAccess
     # pylint: disable=too-many-arguments
-    def __init__(self, data_type, converter=None, default=None, required=False, version='1.0.0'):
+    def __init__(
+        self, data_type, converter=None, default=None, required=False, version="1.0.0"
+    ):
         assert converter is None or isinstance(converter, JsonDataTypeConverter)
         assert isinstance(data_type, JsonDataType)
         # pylint: disable=unidiomatic-typecheck
@@ -96,35 +106,44 @@ class JsonValue(object):
         self.default = default
         self.required = required
         self.version = version
+
     # pylint: enable=too-many-arguments
 
     def convert_from(self, name, value, onerror):
         if value is None:
             if self.required is True:
-                onerror('A value of type ', self.data_type.name, ' is required for ', name)
+                onerror(
+                    "A value of type ", self.data_type.name, " is required for ", name
+                )
             return self.default
-        return self.data_type.convert_from(name, value, self.converter, self.default, onerror)
+        return self.data_type.convert_from(
+            name, value, self.converter, self.default, onerror
+        )
 
     def to_html(self, name):
-        return tuple(chain(
-            (
-                e.TR(
-                    # TODO: JSON encode self.default and self.required
-                    e.TD(name),
-                    e.TD(self.data_type.name),
-                    e.TD(string(self.default)),
-                    e.TD(string(self.required)),
-                    e.TD(string(self.version)),
-                    e.TD('')
+        return tuple(
+            chain(
+                (
+                    e.TR(
+                        # TODO: JSON encode self.default and self.required
+                        e.TD(name),
+                        e.TD(self.data_type.name),
+                        e.TD(string(self.default)),
+                        e.TD(string(self.required)),
+                        e.TD(string(self.version)),
+                        e.TD(""),
+                    ),
                 ),
-            ),
-            *self.data_type.to_html(name)
-        ))
+                *self.data_type.to_html(name)
+            )
+        )
 
     def validate(self, name, value, onerror):
         if value is None:
             if self.required is True:
-                onerror('A value of type ', self.data_type.name, ' is required for ', name)
+                onerror(
+                    "A value of type ", self.data_type.name, " is required for ", name
+                )
                 return False
             return True
         return self.data_type.validate(name, value, onerror)
@@ -132,35 +151,47 @@ class JsonValue(object):
 
 class JsonField(JsonValue):
 
-    __slots__ = ('name',)
+    __slots__ = ("name",)
 
     # pylint: disable=too-many-arguments
-    def __init__(self, name, data_type, converter=None, default=None, required=False, version='1.0.0'):
+    def __init__(
+        self,
+        name,
+        data_type,
+        converter=None,
+        default=None,
+        required=False,
+        version="1.0.0",
+    ):
         assert isinstance(name, string)  # pylint: disable=unidiomatic-typecheck
-        super(JsonField, self).__init__(data_type, converter, default, required, version)
+        super(JsonField, self).__init__(
+            data_type, converter, default, required, version
+        )
         self.name = name
+
     # pylint: enable=too-many-arguments
 
     def to_html(self, name):
-        name = self.name if name is None else name + '.' + self.name
-        return tuple(chain(
-            (
-                e.TR(
-                    # TODO: JSON encode self.default and self.required
-                    e.TD(name),
-                    e.TD(self.data_type.name),
-                    e.TD(string(self.default)),
-                    e.TD(string(self.required)),
-                    e.TD(string(self.version)),
-                    e.TD('')
+        name = self.name if name is None else name + "." + self.name
+        return tuple(
+            chain(
+                (
+                    e.TR(
+                        # TODO: JSON encode self.default and self.required
+                        e.TD(name),
+                        e.TD(self.data_type.name),
+                        e.TD(string(self.default)),
+                        e.TD(string(self.required)),
+                        e.TD(string(self.version)),
+                        e.TD(""),
+                    ),
                 ),
-            ),
-            *self.data_type.to_html(name)
-        ))
+                *self.data_type.to_html(name)
+            )
+        )
 
 
 class JsonDataType(with_metaclass(ABCMeta, object)):
-
     @abstractproperty
     def name(self):
         pass
@@ -174,7 +205,7 @@ class JsonDataType(with_metaclass(ABCMeta, object)):
         try:
             value = converter.convert_from(self, value)
         except (TypeError, ValueError) as error:
-            onerror(name, ': ', error)
+            onerror(name, ": ", error)
             value = default
         return value
 
@@ -189,19 +220,18 @@ class JsonDataType(with_metaclass(ABCMeta, object)):
     def validate(self, name, value, onerror):
         if self.is_instance(value):
             return True
-        onerror('Expected ', self.name, ' value for ', name, ', not ' + string(value))
+        onerror("Expected ", self.name, " value for ", name, ", not " + string(value))
         return False
 
 
 class JsonArray(JsonDataType):
-
     def __init__(self, definition):
         assert isinstance(definition, JsonValue)
         self._definition = definition
 
     @property
     def name(self):
-        return 'Array of ' + self._definition.data_type.name
+        return "Array of " + self._definition.data_type.name
 
     # pylint: disable=too-many-arguments
     def convert_from(self, name, value, converter, default, onerror):
@@ -214,30 +244,34 @@ class JsonArray(JsonDataType):
         if definition.data_type.is_instance(value):
             value = [definition.convert_from(name, value, onerror)]
         else:
-            name += '[{0}]'
+            name += "[{0}]"
             if isinstance(value, MutableSequence):
                 for i, element in enumerate(value):
                     value[i] = definition.convert_from(name.format(i), element, onerror)
             else:
                 value = type(value)(
-                    definition.convert_from(name.format(i), element, onerror) for i, element in enumerate(value)
+                    definition.convert_from(name.format(i), element, onerror)
+                    for i, element in enumerate(value)
                 )
 
         return value if converter is None else converter.convert_from(self, value)
 
     def is_instance(self, value):
-        """ Returns :const:`True` if value is an :class:`Iterable` or an instance of the array type.
+        """Returns :const:`True` if value is an :class:`Iterable` or an instance of the array type.
 
         Otherwise, a value of :const:`False` is returned.
 
         """
-        return (
-            isinstance(value, Iterable) or  # pylint: disable=unidiomatic-typecheck
-            self._definition.data_type.is_instance(value)
+        return isinstance(
+            value, Iterable
+        ) or self._definition.data_type.is_instance(  # pylint: disable=unidiomatic-typecheck
+            value
         )
 
     def to_html(self, name):
-        value = self._definition.to_html('[i]' if name is None else name + '[i]'),  # nopep8, pylint: disable=trailing-comma-tuple
+        value = (
+            self._definition.to_html("[i]" if name is None else name + "[i]"),
+        )  # nopep8, pylint: disable=trailing-comma-tuple
         return value
 
     def validate(self, name, value, onerror):
@@ -250,39 +284,40 @@ class JsonArray(JsonDataType):
         if self.is_instance(value):
             error_count = 0
             for i, element in enumerate(value):
-                error_count += definition.validate(name + '[' + string(i) + ']', element, onerror) is False
+                error_count += (
+                    definition.validate(name + "[" + string(i) + "]", element, onerror)
+                    is False
+                )
             return error_count == 0
 
         return definition.validate(name, value, onerror)
 
 
 class JsonBoolean(JsonDataType):
-
     def __new__(cls):
-        instance = getattr(cls, '_instance', None)
+        instance = getattr(cls, "_instance", None)
         if instance is None:
             instance = cls._instance = super(JsonBoolean, cls).__new__(cls)
         return instance
 
     @property
     def name(self):
-        return 'Boolean'
+        return "Boolean"
 
     def is_instance(self, value):
         return isinstance(value, bool)  # pylint: disable=unidiomatic-typecheck
 
 
 class JsonNumber(JsonDataType):
-
     def __new__(cls):
-        instance = getattr(cls, '_instance', None)
+        instance = getattr(cls, "_instance", None)
         if instance is None:
             instance = cls._instance = super(JsonNumber, cls).__new__(cls)
         return instance
 
     @property
     def name(self):
-        return 'Number'
+        return "Number"
 
     def is_instance(self, value):
         value_type = type(value)
@@ -290,7 +325,6 @@ class JsonNumber(JsonDataType):
 
 
 class JsonObject(JsonDataType):
-
     def __init__(self, *args, **kwargs):
         if len(args) > 0:
             assert all((isinstance(arg, JsonField) for arg in args))
@@ -298,7 +332,7 @@ class JsonObject(JsonDataType):
         else:
             self._fields = None
         try:
-            extra = kwargs['any']
+            extra = kwargs["any"]
             assert isinstance(extra, JsonValue)
         except KeyError:
             extra = None
@@ -306,7 +340,7 @@ class JsonObject(JsonDataType):
 
     @property
     def name(self):
-        return 'Object'
+        return "Object"
 
     # pylint: disable=too-many-arguments
     def convert_from(self, name, value, converter, default, onerror):
@@ -321,7 +355,9 @@ class JsonObject(JsonDataType):
         if not (field_pack is None and fields is None):
 
             def convert_from(definition):
-                return definition.convert_from(name + '.' + field_name, value.get(field_name), onerror)
+                return definition.convert_from(
+                    name + "." + field_name, value.get(field_name), onerror
+                )
 
             if fields is None:
                 for field_name in value:
@@ -339,7 +375,7 @@ class JsonObject(JsonDataType):
             try:
                 value = converter.convert_from(self, value)
             except (ValueError, TypeError) as error:
-                onerror(name, ': ', error)
+                onerror(name, ": ", error)
                 value = None
 
         return value
@@ -350,13 +386,19 @@ class JsonObject(JsonDataType):
     def to_html(self, object_name=None):  # pylint: disable=arguments-differ
         fields = self._fields
         if fields is None:
-            value = self._any.to_html('<name>' if object_name is None else object_name + '.<name>'),  # nopep8, pylint: disable=trailing-comma-tuple
+            value = (
+                self._any.to_html(
+                    "<name>" if object_name is None else object_name + ".<name>"
+                ),
+            )  # nopep8, pylint: disable=trailing-comma-tuple
         else:
-            value = tuple(chain(fields[name].to_html(object_name) for name in self._fields))
+            value = tuple(
+                chain(fields[name].to_html(object_name) for name in self._fields)
+            )
         return value
 
     def validate(self, name, value, onerror):
-        """ Validates the named object `value`.
+        """Validates the named object `value`.
 
         :param name: dotted-path name of the object.
         :type name: string
@@ -376,10 +418,17 @@ class JsonObject(JsonDataType):
         extra, fields = self._any, self._fields
 
         if extra is None and fields is None:
-            return True  # no constraints on field names and no validation of field values
+            return (
+                True  # no constraints on field names and no validation of field values
+            )
 
         def validate(field_definition):
-            return field_definition.validate(name + '.' + field_name, value.get(field_name), onerror) is False
+            return (
+                field_definition.validate(
+                    name + "." + field_name, value.get(field_name), onerror
+                )
+                is False
+            )
 
         error_count = 0
 
@@ -402,7 +451,7 @@ class JsonObject(JsonDataType):
 
                 for field_name in value:
                     if field_name not in fields:
-                        onerror('Illegal field name: ', name, '.', field_name)
+                        onerror("Illegal field name: ", name, ".", field_name)
                         error_count += 1
             else:
 
@@ -416,16 +465,15 @@ class JsonObject(JsonDataType):
 
 
 class JsonString(JsonDataType):
-
     def __new__(cls):
-        instance = getattr(cls, '_instance', None)
+        instance = getattr(cls, "_instance", None)
         if instance is None:
             instance = cls._instance = super(JsonString, cls).__new__(cls)
         return instance
 
     @property
     def name(self):
-        return 'String'
+        return "String"
 
     # pylint: disable=too-many-arguments
     def convert_from(self, name, value, converter, default, onerror):
@@ -436,7 +484,7 @@ class JsonString(JsonDataType):
         try:
             value = converter.convert_from(self, value)
         except (TypeError, ValueError) as error:
-            onerror(name, ': ', error)
+            onerror(name, ": ", error)
             value = default
         return value
 
@@ -445,7 +493,6 @@ class JsonString(JsonDataType):
 
 
 class JsonDataTypeConverter(with_metaclass(ABCMeta, object)):
-
     @abstractmethod
     def convert_from(self, data_type, value):
         pass
@@ -456,27 +503,28 @@ class JsonDataTypeConverter(with_metaclass(ABCMeta, object)):
 
 
 class JsonFilenameConverter(JsonDataTypeConverter):
-
     def __init__(self, verify=None):
         self._verify = lambda stat, value: value if verify is None else verify
 
     def convert_from(self, data_type, value):
-        """ Verifies that the given value is the name of an existing file.
+        """Verifies that the given value is the name of an existing file.
 
         :return: `value`.
         :rtype: `string`
 
         """
-        assert isinstance(data_type, JsonString) and isinstance(value, string)  # pylint: disable=unidiomatic-typecheck
+        assert isinstance(data_type, JsonString) and isinstance(
+            value, string
+        )  # pylint: disable=unidiomatic-typecheck
         try:
             stat = os.stat(value)
         except OSError as error:
             # noinspection PyTypeChecker
-            raise ValueError(error.strerror + ': ' + encode_string(value))
+            raise ValueError(error.strerror + ": " + encode_string(value))
         return self._verify(stat, value)
 
     def convert_to(self, data_type, value):
-        """ Converts the given semantic :type:`Version` `value` to the given `data_type`.
+        """Converts the given semantic :type:`Version` `value` to the given `data_type`.
 
         :return: a value of the given `data_type`.
 
@@ -486,26 +534,31 @@ class JsonFilenameConverter(JsonDataTypeConverter):
 
 
 class JsonVersionConverter(JsonDataTypeConverter):
-
     def __init__(self, version_spec=None):
-        self._version_spec = semantic_version.Spec(version_spec) if isinstance(version_spec, string) else version_spec
+        self._version_spec = (
+            semantic_version.Spec(version_spec)
+            if isinstance(version_spec, string)
+            else version_spec
+        )
 
     def convert_from(self, data_type, value):
-        """ Converts the given `value` to a semantic :type:`Version` number using the specified `data_type`.
+        """Converts the given `value` to a semantic :type:`Version` number using the specified `data_type`.
 
         :return: semantic version number
         :rtype: `Version`
 
         """
-        assert isinstance(data_type, JsonString) and isinstance(value, string)  # pylint: disable=unidiomatic-typecheck
+        assert isinstance(data_type, JsonString) and isinstance(
+            value, string
+        )  # pylint: disable=unidiomatic-typecheck
         version_spec = self._version_spec
         value = Version.coerce(value)
         if version_spec is None or value in version_spec:
             return value
-        raise ValueError('Illegal version number: ' + string(value))
+        raise ValueError("Illegal version number: " + string(value))
 
     def convert_to(self, data_type, value):
-        """ Converts the given semantic :type:`Version` `value` to the given `data_type`.
+        """Converts the given semantic :type:`Version` `value` to the given `data_type`.
 
         :return: a value of the given `data_type`.
 
@@ -515,23 +568,24 @@ class JsonVersionConverter(JsonDataTypeConverter):
 
 
 class JsonVersionSpecConverter(JsonDataTypeConverter):
-
     def convert_from(self, data_type, value):
-        """ Converts the given `value` to a semantic :type:`Version` number using the specified `data_type`.
+        """Converts the given `value` to a semantic :type:`Version` number using the specified `data_type`.
 
         :return: semantic version number
         :rtype: `Version`
 
         """
-        assert isinstance(data_type, JsonString) and isinstance(value, string)  # pylint: disable=unidiomatic-typecheck
+        assert isinstance(data_type, JsonString) and isinstance(
+            value, string
+        )  # pylint: disable=unidiomatic-typecheck
         try:
             value = semantic_version.Spec(value)
         except ValueError:
-            raise ValueError('Illegal version specification: ' + string(value))
+            raise ValueError("Illegal version specification: " + string(value))
         return value
 
     def convert_to(self, data_type, value):
-        """ Converts the given semantic :type:`Version` `value` to the given `data_type`.
+        """Converts the given semantic :type:`Version` `value` to the given `data_type`.
 
         :return: a value of the given `data_type`.
 
@@ -539,4 +593,4 @@ class JsonVersionSpecConverter(JsonDataTypeConverter):
         assert isinstance(data_type, JsonString) and isinstance(value, Version)
         return string(value)
 
-    any_version = semantic_version.Spec('*')
+    any_version = semantic_version.Spec("*")

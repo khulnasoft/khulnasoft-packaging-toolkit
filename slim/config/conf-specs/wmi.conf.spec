@@ -222,4 +222,3 @@ namespace = <string>
 * If the server attribute is present, you cannot specify an absolute
   namespace.
 * Defaults to root\cimv2.
-

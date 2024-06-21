@@ -36,7 +36,7 @@ targetUri = <IP:Port>|<hostname:Port>|direct
 * specify either the url of a remote server in case the broker is remote, or
   just the keyword "direct" when broker is in-process.
 * It is usually a good idea to co-locate the broker and the Deployment Server
-  on the same Khulnasoft. In such a configuration, all 
+  on the same Khulnasoft. In such a configuration, all
 * deployment clients would have targetUri set to deploymentServer:port.
 
 #******************************************************************
@@ -59,4 +59,3 @@ targetUri = <IP:Port>|<hostname:Port>|direct
 * The Uri of a Khulnasoft that is being used as a broker.
 * The keyword "direct" implies that the client is running on the same Khulnasoft
   instance as the broker.
-

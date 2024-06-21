@@ -32,7 +32,6 @@ class CreateSymlink(Command):
         pass
 
     def run(self):
-
         def create_symlink():
             if path.islink(link):
                 os.remove(link)
@@ -42,7 +41,7 @@ class CreateSymlink(Command):
             # We're installing to the user's directory (see --user option) and we've got no good place to create links
             return
 
-        if hasattr(sys, 'real_prefix'):
+        if hasattr(sys, "real_prefix"):
 
             # We're installing to a virtual environment
             prefix = self.exec_prefix
@@ -51,17 +50,17 @@ class CreateSymlink(Command):
 
             # We're installing to the system environment
 
-            if system() == 'Darwin':
-                prefix = '/usr/local'
-                link = path.join(prefix, 'bin', 'slim')
-                target = path.join(self.install_scripts, 'slim')
-                self.execute(create_symlink, (), 'linking ' + link + ' -> ' + target)
+            if system() == "Darwin":
+                prefix = "/usr/local"
+                link = path.join(prefix, "bin", "slim")
+                target = path.join(self.install_scripts, "slim")
+                self.execute(create_symlink, (), "linking " + link + " -> " + target)
                 self.outputs.append(link)
             else:
-                prefix = '/usr'
+                prefix = "/usr"
 
-        target_directory = path.join(self.install_purelib, 'slim/man/man1')
-        link_directory = path.join(prefix, 'share', 'man', 'man1')
+        target_directory = path.join(self.install_purelib, "slim/man/man1")
+        link_directory = path.join(prefix, "share", "man", "man1")
 
         if not path.isdir(link_directory):
             os.makedirs(link_directory)
@@ -69,22 +68,21 @@ class CreateSymlink(Command):
         for target in os.listdir(target_directory):
             link = path.join(link_directory, target)
             target = path.join(target_directory, target)
-            self.execute(create_symlink, (), 'linking ' + link + ' -> ' + target)
+            self.execute(create_symlink, (), "linking " + link + " -> " + target)
             self.outputs.append(link)
 
 
 class Install(install):
-
     def __init__(self, dist):
         self._should_create_symlink = None
         install.__init__(self, dist)
 
     def run(self):
         if self.should_create_symlink():
-            self.distribution.command_options['create_symlink'] = {
-                'install_purelib': ('install command', self.install_purelib),
-                'install_scripts': ('install command', self.install_scripts),
-                'exec_prefix': ('install command', self.exec_prefix)
+            self.distribution.command_options["create_symlink"] = {
+                "install_purelib": ("install command", self.install_purelib),
+                "install_scripts": ("install command", self.install_scripts),
+                "exec_prefix": ("install command", self.exec_prefix),
             }
         install.run(self)
 
@@ -103,56 +101,56 @@ class Install(install):
         if value is None:
             value = self._should_create_symlink = (
                 # not hasattr(sys, 'real_prefix') and
-                system() in ('Darwin', 'Linux') and
-                self.install_base == self.install_platbase
+                system() in ("Darwin", "Linux")
+                and self.install_base == self.install_platbase
             )
         return value
 
-    new_commands = [('create_symlink', should_create_symlink)]
+    new_commands = [("create_symlink", should_create_symlink)]
 
     # Lambda required in Python 3 to workaround "Names in class scope are not accessible"
     # https://stackoverflow.com/questions/13905741/accessing-class-variables-from-a-list-comprehension-in-the-class-definition
     sub_commands = (
-        lambda new_commands = new_commands:
-        [cmd for cmd in install.sub_commands if cmd[0] not in new_commands] + new_commands
+        lambda new_commands=new_commands: [
+            cmd for cmd in install.sub_commands if cmd[0] not in new_commands
+        ]
+        + new_commands
     )()
 
 
 if sys.version_info < (2, 7):
-    raise NotImplementedError('The ' + description + ' requires Python 2.7')
+    raise NotImplementedError("The " + description + " requires Python 2.7")
 
 setup(
-    name='khulnasoft-packaging-toolkit',
-    version='1.0.1',
-    description='KhulnaSoft Packaging Toolkit',
-    url='https://dev.khulnasoft.com',
-    author='KhulnaSoft, Ltd.',
-    author_email='devinfo@khulnasoft.com',
+    name="khulnasoft-packaging-toolkit",
+    version="1.0.1",
+    description="KhulnaSoft Packaging Toolkit",
+    url="https://dev.khulnasoft.com",
+    author="KhulnaSoft, Ltd.",
+    author_email="devinfo@khulnasoft.com",
     classifiers=[
-        'Programming Language :: Python',
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Other Environment',
-        'Intended Audience :: Developers',
-        'License :: Other/Proprietary License',
-        'Operating System :: OS Independent',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Software Development :: Libraries :: Application Frameworks',
+        "Programming Language :: Python",
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Other Environment",
+        "Intended Audience :: Developers",
+        "License :: Other/Proprietary License",
+        "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Software Development :: Libraries :: Application Frameworks",
     ],
-
-    entry_points={'console_scripts': ['slim = slim.__main__:main']},
+    entry_points={"console_scripts": ["slim = slim.__main__:main"]},
     packages=find_packages(),
     package_data={
-        'slim': [
-            'config/conf-specs/*.spec',
-            'config/common-information-models.json',
-            'config/khulnasoft-releases.json',
-            'config/settings',
-            'config/ignore',
-            'man/man1/*.1'
+        "slim": [
+            "config/conf-specs/*.spec",
+            "config/common-information-models.json",
+            "config/khulnasoft-releases.json",
+            "config/settings",
+            "config/ignore",
+            "man/man1/*.1",
         ],
     },
-    data_files=[('', ['LICENSE'])],
-    install_requires=['semantic_version>=2.5.0', 'future>=0.18.2'],
-
-    cmdclass={'install': Install, 'create_symlink': CreateSymlink}
+    data_files=[("", ["LICENSE"])],
+    install_requires=["semantic_version>=2.5.0", "future>=0.18.2"],
+    cmdclass={"install": Install, "create_symlink": CreateSymlink},
 )

@@ -67,6 +67,5 @@ tags = <string>
 
 color = <string>
 * color for this event type.
-* Supported colors: none, et_blue, et_green, et_magenta, et_orange, 
+* Supported colors: none, et_blue, et_green, et_magenta, et_orange,
   et_purple, et_red, et_sky, et_teal, et_yellow
-

@@ -11,7 +11,7 @@ from builtins import object
 
 @total_ordering
 class NamedObject(object):
-    __slots__ = ('_name',)
+    __slots__ = ("_name",)
 
     def __init__(self, name):
         self._name = name

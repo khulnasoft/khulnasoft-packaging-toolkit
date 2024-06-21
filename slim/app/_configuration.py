@@ -8,10 +8,10 @@ from os import path
 
 import io
 
-from . _configuration_validator import AppConfigurationValidator
-from . _internal import FileBuffer, NamedObject, ObjectView
-from .. utils import SlimLogger, encode_string
-from .. utils.internal import string
+from ._configuration_validator import AppConfigurationValidator
+from ._internal import FileBuffer, NamedObject, ObjectView
+from ..utils import SlimLogger, encode_string
+from ..utils.internal import string
 
 
 #
@@ -51,18 +51,15 @@ The app_configuration_spec module defines this class hierarchy:
 
 
 class AppConfiguration(object):
-
     def __init__(self, app_root):
-        """ Create an AppConfiguration object that holds the results from parse conf.
-
-        """
+        """Create an AppConfiguration object that holds the results from parse conf."""
         self._app_root = app_root
         self._files = None
 
     # region Special methods
 
     def __repr__(self):
-        return self.__class__.__name__ + '(app_root=' + repr(self._app_root) + ')'
+        return self.__class__.__name__ + "(app_root=" + repr(self._app_root) + ")"
 
     # endregion
 
@@ -78,7 +75,7 @@ class AppConfiguration(object):
 
     def get(self, file, stanza=None, setting=None):  # pylint: disable=redefined-builtin
         if stanza is None and setting is not None:
-            raise ValueError('Expected setting to be None because stanza is None')
+            raise ValueError("Expected setting to be None because stanza is None")
         try:
             file = self._files[file]
         except KeyError:
@@ -87,7 +84,9 @@ class AppConfiguration(object):
             value = file if stanza is None else file.get(stanza, setting)
         return value
 
-    def get_value(self, file, stanza, setting, default=None):  # pylint: disable=redefined-builtin
+    def get_value(
+        self, file, stanza, setting, default=None
+    ):  # pylint: disable=redefined-builtin
         try:
             file = self._files[file]
         except KeyError:
@@ -98,7 +97,7 @@ class AppConfiguration(object):
 
     def has(self, file, stanza=None, setting=None):  # pylint: disable=redefined-builtin
         if stanza is None and setting is not None:
-            raise ValueError('Expected setting to be None because stanza is None')
+            raise ValueError("Expected setting to be None because stanza is None")
         try:
             file = self._files[file]
         except KeyError:
@@ -120,14 +119,16 @@ class AppConfiguration(object):
 
     def save(self, file, indent=False):  # pylint: disable=redefined-builtin
         if isinstance(file, string):
-            with io.open(file, encoding='utf-8', mode='w', newline='') as ostream:
+            with io.open(file, encoding="utf-8", mode="w", newline="") as ostream:
                 self._save(ostream, indent)
             return
         self._save(file, indent)
 
     def to_dict(self):
         files = self._files
-        value = OrderedDict(((name, files[name]) for name in files))  # copying protects our internals
+        value = OrderedDict(
+            ((name, files[name]) for name in files)
+        )  # copying protects our internals
         return value
 
     # endregion
@@ -141,11 +142,15 @@ class AppConfiguration(object):
         isdir = path.isdir
         join = path.join
 
-        directory_names = (n for n in (join(app_root, n) for n in ('default', 'local')) if isdir(n))
+        directory_names = (
+            n for n in (join(app_root, n) for n in ("default", "local")) if isdir(n)
+        )
         configurations = OrderedDict()
-        end = -len('.conf')
+        end = -len(".conf")
 
-        for filename in chain.from_iterable(sorted(glob(join(d, '*.conf'))) for d in directory_names):
+        for filename in chain.from_iterable(
+            sorted(glob(join(d, "*.conf"))) for d in directory_names
+        ):
             name = basename(filename)[:end]
             try:
                 filenames = configurations[name]
@@ -167,7 +172,9 @@ class AppConfiguration(object):
         self._files = files
 
     def _save(self, ostream, indent):
-        iterencode = ObjectView.iterencode_indent if indent is True else ObjectView.iterencode
+        iterencode = (
+            ObjectView.iterencode_indent if indent is True else ObjectView.iterencode
+        )
         for chunk in iterencode(self):
             ostream.write(string(chunk))
 
@@ -176,7 +183,6 @@ class AppConfiguration(object):
 
 
 class AppConfigurationFile(NamedObject):
-
     def __init__(self, name):
         NamedObject.__init__(self, name)
         self._sections = OrderedDict()
@@ -185,7 +191,14 @@ class AppConfigurationFile(NamedObject):
     # region Special methods
 
     def __repr__(self):
-        return self.__class__.__name__ + '(name=' + repr(self._name) + 'stanzas=' + repr(self._stanzas) + ')'
+        return (
+            self.__class__.__name__
+            + "(name="
+            + repr(self._name)
+            + "stanzas="
+            + repr(self._stanzas)
+            + ")"
+        )
 
     def __str__(self):
         return encode_string(self._name)
@@ -251,12 +264,13 @@ class AppConfigurationFile(NamedObject):
 
     def to_dict(self):
         sections = self._sections
-        return OrderedDict(((name, sections[name]) for name in sections))  # copying protects our internals
+        return OrderedDict(
+            ((name, sections[name]) for name in sections)
+        )  # copying protects our internals
 
     # endregion
 
     class Section(object):
-
         def __init__(self, file_buffer):
             self._file_buffer = file_buffer
 
@@ -264,7 +278,9 @@ class AppConfigurationFile(NamedObject):
 
         def __repr__(self):
             name, stanzas = repr(self.name), repr(self._file_buffer.stanzas)
-            return self.__class__.__name__ + '(name=' + name + ', stanzas=' + stanzas + ')'
+            return (
+                self.__class__.__name__ + "(name=" + name + ", stanzas=" + stanzas + ")"
+            )
 
         def __str__(self):
             return encode_string(self.name)
@@ -302,16 +318,17 @@ class AppConfigurationFile(NamedObject):
             self._file_buffer.save(filename)
 
         def to_dict(self):
-            return OrderedDict(((stanza.name, stanza) for stanza in self.stanzas()))  # copying protects our internals
+            return OrderedDict(
+                ((stanza.name, stanza) for stanza in self.stanzas())
+            )  # copying protects our internals
 
         # endregion
         pass  # pylint: disable=unnecessary-pass
 
-    Section.__name__ = str('AppConfigurationFile.Section')
+    Section.__name__ = str("AppConfigurationFile.Section")
 
 
 class AppConfigurationSetting(NamedObject):
-
     def __init__(self, name):
         NamedObject.__init__(self, name)
         self._sections = OrderedDict()
@@ -338,8 +355,21 @@ class AppConfigurationSetting(NamedObject):
         return not self == other
 
     def __repr__(self):
-        name, placement, position = repr(self._name), repr(self.placement), repr(self.position)
-        return self.__class__.__name__ + '(name=' + name + ', placement=' + placement + ', position=' + position + ')'
+        name, placement, position = (
+            repr(self._name),
+            repr(self.placement),
+            repr(self.position),
+        )
+        return (
+            self.__class__.__name__
+            + "(name="
+            + name
+            + ", placement="
+            + placement
+            + ", position="
+            + position
+            + ")"
+        )
 
     def __str__(self):
         return self._setting.__str__()
@@ -365,7 +395,9 @@ class AppConfigurationSetting(NamedObject):
     # region Methods
 
     def add(self, section):
-        self._sections[section.name] = self._setting = section  # last-in section holds the value of this setting
+        self._sections[
+            section.name
+        ] = self._setting = section  # last-in section holds the value of this setting
 
     def to_dict(self):
         return self._setting.to_dict()
@@ -373,23 +405,24 @@ class AppConfigurationSetting(NamedObject):
     # endregion
 
     class Section(NamedObject):
-
         def __init__(self, name, value, position, placement=None):
 
             NamedObject.__init__(self, name)
             self._placement = placement
             self._position = position
-            self._value = '' if value is None else value.strip()
+            self._value = "" if value is None else value.strip()
 
         # region Special methods
 
         def __repr__(self):
             property_names = self._property_names
-            arguments = (n + '=' + repr(getattr(self, property_names[n])) for n in property_names)
-            return self.__class__.__name__ + '(' + ', '.join(arguments) + ')'
+            arguments = (
+                n + "=" + repr(getattr(self, property_names[n])) for n in property_names
+            )
+            return self.__class__.__name__ + "(" + ", ".join(arguments) + ")"
 
         def __str__(self):
-            return self._name + ' = ' + string(self._value).replace('\n', '\\\n')
+            return self._name + " = " + string(self._value).replace("\n", "\\\n")
 
         # endregion
 
@@ -412,22 +445,29 @@ class AppConfigurationSetting(NamedObject):
         # region Methods
 
         def to_dict(self):
-            return OrderedDict((('value', self._value), ('placement', self._placement), ('line', self._position.line)))
+            return OrderedDict(
+                (
+                    ("value", self._value),
+                    ("placement", self._placement),
+                    ("line", self._position.line),
+                )
+            )
 
         # endregion
 
         # region Protected
 
-        _property_names = OrderedDict(((name, '_' + name) for name in ('name', 'value', 'placement', 'position')))
+        _property_names = OrderedDict(
+            ((name, "_" + name) for name in ("name", "value", "placement", "position"))
+        )
 
         # endregion
         pass  # pylint: disable=unnecessary-pass
 
-    Section.__name__ = str('AppConfigurationSetting.Section')
+    Section.__name__ = str("AppConfigurationSetting.Section")
 
 
 class AppConfigurationStanza(NamedObject):
-
     def __init__(self, name):
         NamedObject.__init__(self, name)
         self._sections = OrderedDict()
@@ -437,10 +477,17 @@ class AppConfigurationStanza(NamedObject):
     # region Special methods
 
     def __repr__(self):
-        return self.__class__.__name__ + '(name=' + repr(self._name) + ', settings=' + repr(self._settings) + ')'
+        return (
+            self.__class__.__name__
+            + "(name="
+            + repr(self._name)
+            + ", settings="
+            + repr(self._settings)
+            + ")"
+        )
 
     def __str__(self):
-        return '[' + self._name.replace('\n', '\\n') + ']'
+        return "[" + self._name.replace("\n", "\\n") + "]"
 
     # endregion
 
@@ -512,12 +559,13 @@ class AppConfigurationStanza(NamedObject):
 
     def to_dict(self):
         settings = self._settings
-        OrderedDict((name, settings[name]) for name in self._settings)  # copying protects our internals
+        OrderedDict(
+            (name, settings[name]) for name in self._settings
+        )  # copying protects our internals
 
     # endregion
 
     class Section(NamedObject):
-
         def __init__(self, name, placement, position):
             NamedObject.__init__(self, name)
             self._settings = OrderedDict()
@@ -527,10 +575,17 @@ class AppConfigurationStanza(NamedObject):
         # region Special methods
 
         def __repr__(self):
-            return self.__class__.__name__ + '(name=' + repr(self._name) + ', position=' + repr(self._position) + ')'
+            return (
+                self.__class__.__name__
+                + "(name="
+                + repr(self._name)
+                + ", position="
+                + repr(self._position)
+                + ")"
+            )
 
         def __str__(self):
-            return '[' + self._name.replace('\n', '\\n') + ']'
+            return "[" + self._name.replace("\n", "\\n") + "]"
 
         # endregion
 
@@ -568,15 +623,18 @@ class AppConfigurationStanza(NamedObject):
             return (settings[name] for name in settings)
 
         def to_dict(self):
-            return OrderedDict((setting.name, setting) for setting in self.settings())  # copying protects our internals
+            return OrderedDict(
+                (setting.name, setting) for setting in self.settings()
+            )  # copying protects our internals
 
         # endregion
         pass  # pylint: disable=unnecessary-pass
 
-    Section.__name__ = str('AppConfigurationStanza.Section')
+    Section.__name__ = str("AppConfigurationStanza.Section")
 
 
 # region Protected
+
 
 def _default_value(setting, default):
     if not isinstance(setting, tuple):
@@ -584,14 +642,15 @@ def _default_value(setting, default):
     if default is None:
         return (None,) * len(setting), True
     if not isinstance(default, tuple):
-        raise TypeError('Expected default: tuple, not default: ', type(setting).__name__)
+        raise TypeError(
+            "Expected default: tuple, not default: ", type(setting).__name__
+        )
     if len(default) != len(setting):
-        raise ValueError('Expected len(default) == len(setting)')
+        raise ValueError("Expected len(default) == len(setting)")
     return tuple(default), True
 
 
 class _AppConfigurationFileBuffer(FileBuffer):
-
     def __init__(self, filename):
         FileBuffer.__init__(self, filename)
         self._stanzas = None
@@ -607,13 +666,11 @@ class _AppConfigurationFileBuffer(FileBuffer):
     # region Protected
 
     def _load(self, reader, **kwargs):
-        """ Loads or reloads the conf file associated with the current Buffer
-
-        """
+        """Loads or reloads the conf file associated with the current Buffer"""
         match_assignment_statement = self._match_assignment_statement
         skip_whitespace = self._skip_whitespace
         self._stanzas = stanzas = OrderedDict()
-        validator = kwargs['validator']
+        validator = kwargs["validator"]
 
         current_stanza = None
         validate_setting = None
@@ -624,14 +681,14 @@ class _AppConfigurationFileBuffer(FileBuffer):
                 start = match.end()
                 if start >= len(line):
                     # blank line
-                    item = '\n'
+                    item = "\n"
                     start = 0
-                elif line[start] in ';#':
+                elif line[start] in ";#":
                     # comment
                     item = line[start:]
                 else:
                     line = reader.read_continuation(line)
-                    if line[start] == '[':
+                    if line[start] == "[":
                         # stanza where namesakes are merged (by way of the call to stanzas.setdefault)
                         item = self._parse_stanza(line, start, reader, validator)
                         validate_setting = validator.get(item)
@@ -640,23 +697,30 @@ class _AppConfigurationFileBuffer(FileBuffer):
                         if current_stanza is None:
                             # settings before a stanza get put into the [default] stanza
                             current_stanza = AppConfigurationStanza.Section(
-                                'default', validator.get_placement('default'), reader.position
+                                "default",
+                                validator.get_placement("default"),
+                                reader.position,
                             )
                             validate_setting = validator.get(current_stanza)
-                            stanzas['default'] = current_stanza
+                            stanzas["default"] = current_stanza
                         # setting where namesakes are replaced
                         match = match_assignment_statement(line, start)
                         if match is None:
                             text = encode_string(line.strip())
-                            raise self._Error('Expected a setting assignment, not ' + text)
+                            raise self._Error(
+                                "Expected a setting assignment, not " + text
+                            )
                         item = AppConfigurationSetting.Section(
-                            name=match.group(1), value=match.group(2), position=reader.position,
-                            placement=current_stanza.placement)
+                            name=match.group(1),
+                            value=match.group(2),
+                            position=reader.position,
+                            placement=current_stanza.placement,
+                        )
                         current_stanza.add(item)
                         validate_setting(item)
                 self._append(item, reader.position, indentation=start)
             except self._Error as error:
-                SlimLogger.error(reader.position, ': ', error)
+                SlimLogger.error(reader.position, ": ", error)
 
     def _parse_stanza(self, line, start, reader, validator):
 
@@ -664,7 +728,10 @@ class _AppConfigurationFileBuffer(FileBuffer):
         match = self._search_right_square_bracket(line, start)
 
         if match is None:
-            SlimLogger.warning(reader.position, ': missing terminating right square bracket at end of stanza header')
+            SlimLogger.warning(
+                reader.position,
+                ": missing terminating right square bracket at end of stanza header",
+            )
             end = -1
         else:
             end = match.start()
@@ -675,5 +742,6 @@ class _AppConfigurationFileBuffer(FileBuffer):
 
     # endregion
     pass  # pylint: disable=unnecessary-pass
+
 
 # endregion

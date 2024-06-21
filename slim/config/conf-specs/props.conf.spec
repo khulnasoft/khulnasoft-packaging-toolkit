@@ -662,7 +662,7 @@ TIMESTAMP_FIELDS = [ <string>,..., <string>]
 * If not specified, Khulnasoft tries to automatically extract the timestamp of
   the event.
 
-FIELD_NAMES = [ <string>,..., <string>] 
+FIELD_NAMES = [ <string>,..., <string>]
 * Some CSV and structured files might have missing headers. This attribute
   tells Khulnasoft to specify the header field names directly.
 
@@ -673,8 +673,8 @@ JSON_TRIM_BRACES_IN_ARRAY_NAMES = <bool>
 * Tell the json parser not to add the curly braces to array names.
 * Note that enabling this will make json indextime extracted array fiels names
   inconsistant with spath search processor's naming convention.
-* For a json document containing the following array object, with trimming 
-  enabled a indextime field 'mount_point' will be generated instead of the 
+* For a json document containing the following array object, with trimming
+  enabled a indextime field 'mount_point' will be generated instead of the
   spath consistant field 'mount_point{}'
       "mount_point": ["/disk48","/disk22"]
 * Defaults to false.

@@ -14,16 +14,16 @@ import atexit
 import errno
 import shutil
 
-from .. utils.internal import string
+from ..utils.internal import string
 
 
 __all__ = [
-    'SlimConstants',
-    'SlimEnum',
-    'SlimError',
-    'SlimInstallationGraphActions',
-    'SlimStatus',
-    'SlimUnreferencedInputGroups'
+    "SlimConstants",
+    "SlimEnum",
+    "SlimError",
+    "SlimInstallationGraphActions",
+    "SlimStatus",
+    "SlimUnreferencedInputGroups",
 ]
 
 
@@ -32,13 +32,12 @@ class SlimEnum(tuple):
 
 
 class SlimCacheInfo(object):
-
     def __init__(self, temp_directory_path):
 
         if not path.isdir(temp_directory_path):
             makedirs(temp_directory_path)
 
-        cache_path = mkdtemp(prefix='slim.cache_', dir=temp_directory_path)
+        cache_path = mkdtemp(prefix="slim.cache_", dir=temp_directory_path)
         self._cache_prefix = temp_directory_path
         self._cache_path = cache_path
         self._sources = OrderedDict()
@@ -73,61 +72,54 @@ class SlimCacheInfo(object):
 
 
 # Various status codes indicating the type of error
-SlimStatus = SlimEnum([
-    'STATUS_OK',
-    'STATUS_ERROR_GENERAL',
-    'STATUS_ERROR_CONFLICT',
-    'STATUS_ERROR_RESOLVABLE_CONFLICT',
-    'STATUS_ERROR_MISSING_DEPENDENCIES',
-    'STATUS_ERROR_DEPENDENCY_REQUIRED'
-])
-
-
-SlimConstants = namedtuple('SlimConstants', ('DEPENDENCIES_DIR',))(
-    DEPENDENCIES_DIR='.dependencies'
+SlimStatus = SlimEnum(
+    [
+        "STATUS_OK",
+        "STATUS_ERROR_GENERAL",
+        "STATUS_ERROR_CONFLICT",
+        "STATUS_ERROR_RESOLVABLE_CONFLICT",
+        "STATUS_ERROR_MISSING_DEPENDENCIES",
+        "STATUS_ERROR_DEPENDENCY_REQUIRED",
+    ]
 )
 
 
-SlimUnreferencedInputGroups = namedtuple('SlimUnreferencedInputGroups', ('note', 'info', 'warn', 'error'))(
-    note='note',  # kept for backwards compatibility
-    info='info',  # default
-    warn='warn',
-    error='error'
+SlimConstants = namedtuple("SlimConstants", ("DEPENDENCIES_DIR",))(
+    DEPENDENCIES_DIR=".dependencies"
 )
 
 
-SlimInstallationGraphActions = namedtuple('SlimInstallationGraphActions', ('add', 'set', 'update', 'remove'))(
-    add='add',
-    set='set',
-    update='update',
-    remove='remove'
+SlimUnreferencedInputGroups = namedtuple(
+    "SlimUnreferencedInputGroups", ("note", "info", "warn", "error")
+)(
+    note="note",  # kept for backwards compatibility
+    info="info",  # default
+    warn="warn",
+    error="error",
 )
+
+
+SlimInstallationGraphActions = namedtuple(
+    "SlimInstallationGraphActions", ("add", "set", "update", "remove")
+)(add="add", set="set", update="update", remove="remove")
 
 
 SlimTargetOSWildcard = "*"
 
 
-SlimTargetOS = [
-    SlimTargetOSWildcard,
-    "_mac",
-    "_linux_x86",
-    "_linux_x86_64",
-    "_windows"
-]
+SlimTargetOS = [SlimTargetOSWildcard, "_mac", "_linux_x86", "_linux_x86_64", "_windows"]
 
 
 class SlimError(Exception):
-
     def __init__(self, *message):
-        Exception.__init__(self, ''.join(message))
+        Exception.__init__(self, "".join(message))
 
 
 class KhulnasoftInfo(object):
-
     def __init__(self):
-        self._home = string(environ['KHULNASOFT_HOME'])
-        self._etc = path.join(self._home, 'etc')
-        self._bin = path.join(self._home, 'bin')
+        self._home = string(environ["KHULNASOFT_HOME"])
+        self._etc = path.join(self._home, "etc")
+        self._bin = path.join(self._home, "bin")
 
     @property
     def home(self):

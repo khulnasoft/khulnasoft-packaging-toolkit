@@ -1686,23 +1686,23 @@ useACK = [true|false]
 allowQueryStringAuth = [true|false]
 * Enable or disable sending authorization token with query string.
 * This is a token level config, it may only be set for a particular token.
-* To use this feature, set to true and configure client application to include 
-  the token in the query string portion of the URL they use to send data to 
-  khulnasoft in the format of "https://<URL>?<your=query-string>&token=<your-token>" 
-  or "https://<URL>?token=<your-token>" if the token is the first element in the 
+* To use this feature, set to true and configure client application to include
+  the token in the query string portion of the URL they use to send data to
+  khulnasoft in the format of "https://<URL>?<your=query-string>&token=<your-token>"
+  or "https://<URL>?token=<your-token>" if the token is the first element in the
   query string.
-* If a token is sent in both the query string and an HTTP header, the one in the 
-  query string takes precedence, even if this feature is disabled. In other words, 
-  if a token is present in the query string, any token in the header for that 
+* If a token is sent in both the query string and an HTTP header, the one in the
+  query string takes precedence, even if this feature is disabled. In other words,
+  if a token is present in the query string, any token in the header for that
   request will not be used."
-* Note: Query string may be observed in transit and/or logged in cleartext; it 
-  provides no confidentiality protection for the transmitted tokens. Before use 
-  in production, consult security personnel of your organization to understand 
-  and plan to mitigate the risks. At a minimum, always use HTTPS on when this 
-  feature os enabled, check your client application, proxy and logging configurations 
-  to make sure token is not logged in clear text, give minimal access permissions 
-  to the token in Khulnasoft and restrict the use of the token only to trusted client 
-  applications. 
+* Note: Query string may be observed in transit and/or logged in cleartext; it
+  provides no confidentiality protection for the transmitted tokens. Before use
+  in production, consult security personnel of your organization to understand
+  and plan to mitigate the risks. At a minimum, always use HTTPS on when this
+  feature os enabled, check your client application, proxy and logging configurations
+  to make sure token is not logged in clear text, give minimal access permissions
+  to the token in Khulnasoft and restrict the use of the token only to trusted client
+  applications.
 * Defaults to false.
 
 #*******
@@ -1882,7 +1882,7 @@ usePDHFmtNoCap100 = <boolean>
   counter values that measure the processor load on computers with multiple
   processors) are reset to 100.
 * If set to "true", the counter values can exceed 100.
-* If set to "false", the input resets counter values to 100 if the 
+* If set to "false", the input resets counter values to 100 if the
   processor load on multiprocessor computers exceeds 100.
 * Default: false
 
@@ -2530,7 +2530,7 @@ readInterval = <integer>
 * Defaults to unset, handled as 100 (msec).
 
 driverBufferSize = <integer>
-* The maximum number of packets that the network kernel driver retains 
+* The maximum number of packets that the network kernel driver retains
   for retrieval by the input.
 * Set to adjust the maximum number of network packets retained in
   the network driver buffer.

@@ -34,36 +34,36 @@ acceleration = <bool>
 * These column stores take additional space on disk, so be sure you have the
   proper amount of disk space. Additional space required depends on the
   number of events, fields, and distinct field values in the data.
-* The Khulnasoft software creates and maintains these column stores on a schedule 
+* The Khulnasoft software creates and maintains these column stores on a schedule
   you can specify with 'acceleration.cron_schedule.' You can query
   them with the 'tstats' command.
 
 acceleration.earliest_time = <relative-time-str>
-* Specifies how far back in time the Khulnasoft software should keep these column 
+* Specifies how far back in time the Khulnasoft software should keep these column
   stores (and create if acceleration.backfill_time is not set).
-* Specified by a relative time string. For example, '-7d' means 'accelerate 
+* Specified by a relative time string. For example, '-7d' means 'accelerate
   data within the last 7 days.'
 * Defaults to an empty string, meaning 'keep these stores for all time.'
 
 acceleration.backfill_time = <relative-time-str>
-* ADVANCED: Specifies how far back in time the Khulnasoft software should create 
+* ADVANCED: Specifies how far back in time the Khulnasoft software should create
   its column stores.
 * ONLY set this parameter if you want to backfill less data than the
   retention period set by 'acceleration.earliest_time'. You may want to use
-  this parameter to limit your time window for column store creation in a large 
-  environment where initial creation of a large set of column stores is an 
+  this parameter to limit your time window for column store creation in a large
+  environment where initial creation of a large set of column stores is an
   expensive operation.
-* WARNING: Do not set 'acceleration.backfill_time' to a 
-  narrow time window. If one of your indexers is down for a period longer 
-  than this backfill time, you may miss accelerating a window of your incoming 
-  data. 
+* WARNING: Do not set 'acceleration.backfill_time' to a
+  narrow time window. If one of your indexers is down for a period longer
+  than this backfill time, you may miss accelerating a window of your incoming
+  data.
 * MUST be set to a more recent time than 'acceleration.earliest_time'. For
-  example, if you set 'acceleration.earliest_time' to '-1y' to retain your  
-  column stores for a one year window, you could set 'acceleration.backfill_time' 
-  to '-20d' to create column stores that only cover the last 20 days. However, 
-  you cannot set 'acceleration.backfill_time' to '-2y', because that goes 
+  example, if you set 'acceleration.earliest_time' to '-1y' to retain your
+  column stores for a one year window, you could set 'acceleration.backfill_time'
+  to '-20d' to create column stores that only cover the last 20 days. However,
+  you cannot set 'acceleration.backfill_time' to '-2y', because that goes
   farther back in time than the 'acceleration.earliest_time' setting of '-1y'.
-* Defaults to empty string (unset). When 'acceleration.backfill_time' is unset, 
+* Defaults to empty string (unset). When 'acceleration.backfill_time' is unset,
   the Khulnasoft software always backfills fully to 'acceleration.earliest_time.'
 
 acceleration.max_time = <unsigned int>
@@ -72,7 +72,7 @@ acceleration.max_time = <unsigned int>
 * Note that this is an approximate time, as the 'summarize' search only
   finishes on clean bucket boundaries to avoid wasted work.
 * Defaults to: 3600
-* An 'acceleration.max_time' setting of '0' indicates that there is no time 
+* An 'acceleration.max_time' setting of '0' indicates that there is no time
   limit.
 
 acceleration.cron_schedule = <cron-string>
@@ -81,17 +81,17 @@ acceleration.cron_schedule = <cron-string>
 * Defaults to: */5 * * * *
 
 acceleration.manual_rebuilds = <bool>
-* ADVANCED: When set to 'true,' this setting prevents outdated summaries from 
+* ADVANCED: When set to 'true,' this setting prevents outdated summaries from
   being rebuilt by the 'summarize' command.
-* Normally, during the creation phase, the 'summarize' command automatically 
-  rebuilds summaries that are considered to be out-of-date, such as when the 
+* Normally, during the creation phase, the 'summarize' command automatically
+  rebuilds summaries that are considered to be out-of-date, such as when the
   configuration backing the data model changes.
 * The Khulnasoft software considers a summary to be outdated when:
-	* The data model search stored in its metadata no longer matches its current 
+	* The data model search stored in its metadata no longer matches its current
 	  data model search.
 	* The search stored in its metadata cannot be parsed.
     * A lookup table associated with the data model is altered.
-* NOTE: If the Khulnasoft software finds a partial summary be outdated, it always 
+* NOTE: If the Khulnasoft software finds a partial summary be outdated, it always
   rebuilds that summary so that a bucket summary only has results corresponding to
   one datamodel search.
 * Defaults to: false
@@ -144,16 +144,16 @@ dataset.description = <string>
 dataset.type = [datamodel|table]
 * The type of dataset:
   + "datamodel": An individual data model dataset.
-  + "table": A special root data model dataset with a search where the dataset is 
+  + "table": A special root data model dataset with a search where the dataset is
     defined by the dataset.commands attribute.
 * Default: datamodel
 
 dataset.commands = [<object>(, <object>)*]
-* When the dataset.type = "table" this stringified JSON payload is created by the 
+* When the dataset.type = "table" this stringified JSON payload is created by the
   table editor and defines the dataset.
 
 dataset.fields = [<string>(, <string>)*]
-* Automatically generated JSON payload when dataset.type = "table" and the root 
+* Automatically generated JSON payload when dataset.type = "table" and the root
   data model dataset's search is updated.
 
 dataset.display.diversity = [latest|random|diverse|rare]
@@ -165,11 +165,11 @@ dataset.display.diversity = [latest|random|diverse|rare]
 * Default: latest
 
 dataset.display.sample_ratio = <int>
-* The integer value used to calculate the sample ratio for the dataset diversity. 
+* The integer value used to calculate the sample ratio for the dataset diversity.
   The formula is 1 / <int>.
-* The sample ratio specifies the likelihood of any event being included in the 
+* The sample ratio specifies the likelihood of any event being included in the
   sample.
-* For example, if sample_ratio = 500 each event has a 1/500 chance of being 
+* For example, if sample_ratio = 500 each event has a 1/500 chance of being
   included in the sample result set.
 * Default: 1
 
@@ -187,9 +187,9 @@ dataset.display.mode = [table|datasummary]
 * Default: table
 
 dataset.display.datasummary.earliestTime = <time-str>
-* The earliest time used for the search that powers the datasummary view of 
+* The earliest time used for the search that powers the datasummary view of
   the dataset.
 
 dataset.display.datasummary.latestTime = <time-str>
-* The latest time used for the search that powers the datasummary view of 
+* The latest time used for the search that powers the datasummary view of
   the dataset.

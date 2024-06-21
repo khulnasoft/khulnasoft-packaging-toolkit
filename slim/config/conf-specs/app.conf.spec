@@ -65,14 +65,14 @@ author = <name>
 # Your app can include an icon which will show up next to your app in Launcher
 # and on Khulnasoftbase. You can also include a screenshot, which will show up on
 # Khulnasoftbase when the user views info about your app before downloading it.
-# You do not need to include an icon, but if you do, icon file names must end 
+# You do not need to include an icon, but if you do, icon file names must end
 # with "Icon" before the file extension, and the "I" must be capitalized. For
 # example, "mynewIcon.png".
 # Screenshots are optional.
 #
 # There is no setting in app.conf for these images. Khulnasoft Web places files you
-# upload into the <app_directory>/appserver/static directory. These images will  
-# not appear in your app. 
+# upload into the <app_directory>/appserver/static directory. These images will
+# not appear in your app.
 #
 # Move or place icon images to the <app_directory>/static directory.
 # Move or place screenshot images to the <app_directory>/default/static directory.

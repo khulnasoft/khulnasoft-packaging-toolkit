@@ -44,7 +44,7 @@ authSettings = <authSettings-key>,<authSettings-key>,...
   strategies. Each strategy must be defined in its own stanza. The order in
   which you specify the strategy names will be the order Khulnasoft uses to
   query their servers when looking for a user.
-* For scripted authentication, <authSettings-key> should be a single 
+* For scripted authentication, <authSettings-key> should be a single
   stanza name.
 
 passwordHashAlgorithm = [SHA512-crypt|SHA256-crypt|SHA512-crypt-<num_rounds>|SHA256-crypt-<num_rounds>|MD5-crypt]
@@ -147,7 +147,7 @@ userNameAttribute = <string>
 
 realNameAttribute = <string>
 * REQUIRED
-* This is the user entry attribute whose value is their real name 
+* This is the user entry attribute whose value is their real name
   (human readable).
 * A typical attribute for this is 'cn'
 
@@ -171,7 +171,7 @@ groupMappingAttribute  = <string>
 
 groupBaseDN = [<string>;<string>;...]
 * REQUIRED
-* This is the distinguished names of LDAP entries whose subtrees contain 
+* This is the distinguished names of LDAP entries whose subtrees contain
   the groups.
 * Enter a ';' delimited list to search multiple trees.
 * If your LDAP environment does not have group entries, there is a
@@ -285,7 +285,7 @@ network_timeout = <integer>
 * IMPORTANT: this role mapping ONLY applies to the specified strategy.
 * Follow this stanza name with several Role-to-Group(s) mappings as defined
   below.
-* Note: Importing groups for the same user from different strategies is not 
+* Note: Importing groups for the same user from different strategies is not
   supported.
 
 <Khulnasoft RoleName> = <LDAP group string>
@@ -436,9 +436,9 @@ errorUrl = <url>
 * OPTIONAL
 * The url to be displayed for a SAML error. Errors may be due to
   erroneous or incomplete configuration in either the IDP or Khulnasoft.
-  This url can be absolute or relative. Absolute url should follow pattern 
+  This url can be absolute or relative. Absolute url should follow pattern
   <protocol>:[//]<host> e.g. https://www.external-site.com.
-  Relative urls should start with '/'. A relative url will show up as an 
+  Relative urls should start with '/'. A relative url will show up as an
   internal link of the khulnasoft instance, e.g. https://khulnasofthost:port/relativeUrlWithSlash
 
 errorUrlLabel = <string>
@@ -528,7 +528,7 @@ attributeQueryTTL = <ttl in seconds>
 
 allowSslCompression = [ true | false ]
 * OPTIONAL
-* If set to true, the server will allow clients to negotiate SSL-layer 
+* If set to true, the server will allow clients to negotiate SSL-layer
   data compression.
 * If not set, defaults to the setting in server.conf.
 
@@ -538,7 +538,7 @@ cipherSuite = <cipher suite string>
 * If not set, defaults to the setting in server.conf.
 * Attribute query requests might fail if the IDP requires a relaxed
   ciphersuite.
-* Use "openssl s_client -cipher 'TLSv1+HIGH:@STRENGTH' -host <IDP host> -port 443" 
+* Use "openssl s_client -cipher 'TLSv1+HIGH:@STRENGTH' -host <IDP host> -port 443"
   to determine if khulnasoft can connect to the IDP
 
 sslVersions = <versions_list>
@@ -906,4 +906,3 @@ useClientSSLCompression = <bool>
 * If set to true on client side, compression is enabled between the server and client
   as long as the server also supports it.
 * If not set, Khulnasoft uses the client SSL compression setting provided in server.conf
-

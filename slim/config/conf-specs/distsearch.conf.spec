@@ -97,7 +97,7 @@ quarantined_servers = <comma separated list of servers>
   realtime searches started after the peer has been quarantined will not contact the peer.
 * Whenever a quarantined peer is excluded from search, appropriate warnings will be displayed
   in the search.log and Job Inspector
- 
+
 shareBundles = [true|false]
 * Indicates whether this server will use bundle replication to share search
   time configuration with search peers.
@@ -386,7 +386,7 @@ bundles_location = <path_to_bundles>
 #******************************************************************************
 # DISTRIBUTED SEARCH GROUP DEFINITIONS
 # These are the definitions of the distributed search groups. A search group is
-# a set of search peers as identified by thier host:management-port. A search 
+# a set of search peers as identified by thier host:management-port. A search
 # may be directed to a search group using the khulnasoft_server_group argument.The
 # search will be dispatched to only the members of the group.
 #******************************************************************************

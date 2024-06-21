@@ -15,12 +15,11 @@ import re
 from future.utils import with_metaclass
 
 
-from . file_reader import FileReader
-from ... utils.internal import string
+from .file_reader import FileReader
+from ...utils.internal import string
 
 
 class FileBuffer(with_metaclass(ABCMeta, object)):
-
     def __init__(self, filename):
         self._filename = path.abspath(filename)
         self._records = []
@@ -39,7 +38,7 @@ class FileBuffer(with_metaclass(ABCMeta, object)):
         if file is None:
             file = self.filename
         if isinstance(file, string):
-            with io.open(file, encoding='utf-8', mode='w', newline='') as ostream:
+            with io.open(file, encoding="utf-8", mode="w", newline="") as ostream:
                 self._dump(ostream)
             return
         self._dump(ostream=file)
@@ -50,7 +49,7 @@ class FileBuffer(with_metaclass(ABCMeta, object)):
 
         try:
             header = os.read(file_no, 4)
-            encoding = 'utf-8-sig'
+            encoding = "utf-8-sig"
             offset = 0
 
             for supported_encoding, byte_order_marks in self._supported_encodings:
@@ -79,23 +78,23 @@ class FileBuffer(with_metaclass(ABCMeta, object)):
             self._save(file)
         else:
             # TODO: write to a temporary file, then delete the original, and give the temporary file its name
-            with io.open(file, encoding='utf-8', mode='w', newline='') as ostream:
+            with io.open(file, encoding="utf-8", mode="w", newline="") as ostream:
                 self._save(ostream)
 
     # endregion
 
     # region Protected
 
-    _access_mode = os.O_RDONLY | getattr(os, 'O_BINARY', 0)
+    _access_mode = os.O_RDONLY | getattr(os, "O_BINARY", 0)
 
     _supported_encodings = (
-        ('utf-8-sig', (BOM_UTF8,)), ('utf-16', (BOM_UTF16_LE, BOM_UTF16_BE)), ('utf-32', (BOM_UTF32_LE, BOM_UTF32_BE))
+        ("utf-8-sig", (BOM_UTF8,)),
+        ("utf-16", (BOM_UTF16_LE, BOM_UTF16_BE)),
+        ("utf-32", (BOM_UTF32_LE, BOM_UTF32_BE)),
     )
 
     def _append(self, item, position, indentation):
-        """ Appends an item with the given indentation to the current Buffer
-
-        """
+        """Appends an item with the given indentation to the current Buffer"""
         records = self._records
         records.append(FileBuffer._Record(item, position, indentation))
 
@@ -106,7 +105,9 @@ class FileBuffer(with_metaclass(ABCMeta, object)):
     def _load(self, reader, **kwargs):
         pass
 
-    _match_assignment_statement = re.compile(r'(?!\*)((?:\\.|[^\\=])*?)\s*=\s*(.*)\s*\n?$', re.M | re.S | re.U).match
+    _match_assignment_statement = re.compile(
+        r"(?!\*)((?:\\.|[^\\=])*?)\s*=\s*(.*)\s*\n?$", re.M | re.S | re.U
+    ).match
 
     def _save(self, ostream):
         for record in self._records:
@@ -114,15 +115,15 @@ class FileBuffer(with_metaclass(ABCMeta, object)):
             item = record.item
             if isinstance(item, string):
                 if indentation > 0:
-                    ostream.write(' ' * indentation)
+                    ostream.write(" " * indentation)
                 ostream.write(item)
             else:
                 ostream.write(string(item))
-                ostream.write('\n')
+                ostream.write("\n")
 
-    _search_right_square_bracket = re.compile(r'\]\s*$', re.M | re.U).search
+    _search_right_square_bracket = re.compile(r"\]\s*$", re.M | re.U).search
 
-    _skip_whitespace = re.compile(r'\s*', re.M | re.U).match
+    _skip_whitespace = re.compile(r"\s*", re.M | re.U).match
 
     # endregion
 
@@ -130,10 +131,10 @@ class FileBuffer(with_metaclass(ABCMeta, object)):
         pass
 
     # noinspection PyClassHasNoInit
-    class _Record(namedtuple('_Record', ('item', 'position', 'column'))):
+    class _Record(namedtuple("_Record", ("item", "position", "column"))):
         __slots__ = ()  # no extra slots required for this derived type
 
         def __str__(self):
-            return ' ' * self.column + string(self.item)
+            return " " * self.column + string(self.item)
 
     pass  # pylint: disable=unnecessary-pass

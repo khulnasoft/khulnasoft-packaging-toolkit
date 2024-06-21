@@ -92,7 +92,7 @@ capability.<post|delete|get|put>=<capabilityName>
   checked against the authenticated user's role.
 * If you just use 'capability,' then all calls get checked against this
   capability (regardless of the HTTP method).
-* Capabilities can also be expressed as a boolean expression. Supported operators 
+* Capabilities can also be expressed as a boolean expression. Supported operators
   include: or, and, (), !
 
 acceptFrom=<network_acl> ...
@@ -274,7 +274,7 @@ handleractions=<comma separated list>
 
 [validation:<handler-name>]
 
-<field> =  <validation-rule> 
+<field> =  <validation-rule>
 
 * <field> is the name of the field whose value would be validated when an
   object is being saved.
@@ -349,4 +349,3 @@ filternodes = <comma separated management uris>
 destination = <khulnasoftbaseAPIURL>
 * protocol, subdomain, domain, port, and path of the khulnasoftbase api used to browse apps
 * Defaults to https://khulnasoftbase.khulnasoft.com/api
-

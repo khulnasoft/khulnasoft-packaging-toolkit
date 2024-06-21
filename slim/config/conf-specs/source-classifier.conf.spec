@@ -23,4 +23,3 @@ ignored_model_keywords = <space-separated list of terms>
 ignored_filename_keywords = <space-separated list of terms>
 * Terms to ignore when comparing a new sourcename against a known
   sourcename, for the purpose of classifying a source.
-

@@ -7,11 +7,10 @@ from collections import MutableSet  # pylint: disable=no-name-in-module
 
 
 class OrderedSet(MutableSet):
-
     def __init__(self, iterable=None):
         self._end = end = []
         end += [None, end, end]  # Sentinel node for doubly linked list
-        self._map = {}           # key -> [key, prev, next]
+        self._map = {}  # key -> [key, prev, next]
         if iterable is None:
             return
         for item in iterable:
@@ -47,7 +46,11 @@ class OrderedSet(MutableSet):
 
     def __repr__(self):
         name = self.__class__.__name__
-        return name + '()' if len(self._map) == 0 else name + '([' + ', '.join((repr(item) for item in self)) + '])'
+        return (
+            name + "()"
+            if len(self._map) == 0
+            else name + "([" + ", ".join((repr(item) for item in self)) + "])"
+        )
 
     def __reversed__(self):
         end = self._end

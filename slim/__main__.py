@@ -31,42 +31,66 @@ def main(argv=None):
 def new_argument_parser():
 
     parser = SlimArgumentParser(
-        prog=program, description='execute a packaging toolkit command',
-        formatter_class=RawDescriptionHelpFormatter
+        prog=program,
+        description="execute a packaging toolkit command",
+        formatter_class=RawDescriptionHelpFormatter,
     )
 
-    parser.add_argument('-v', '--version', action='version', version=version)
+    parser.add_argument("-v", "--version", action="version", version=version)
     parser.add_argument_help()
-    parser.add_argument('--debug', action='set_debug', help='save debugging information')
-    parser.add_argument('--quiet', action='set_quiet', help='suppress all messages except error messages')
+    parser.add_argument(
+        "--debug", action="set_debug", help="save debugging information"
+    )
+    parser.add_argument(
+        "--quiet",
+        action="set_quiet",
+        help="suppress all messages except error messages",
+    )
 
-    command_parsers = parser.add_subparsers(title=program + ' commands')
+    command_parsers = parser.add_subparsers(title=program + " commands")
     command_parsers.required = False
 
     for name, command_module in (
-            ('config', __import__('slim.config', fromlist=['main', 'parser'])),
-            ('describe', __import__('slim.describe', fromlist=['main', 'parser'])),
-            ('generate-manifest', __import__('slim.generate_manifest', fromlist=['main', 'parser'])),
-            ('package', __import__('slim.package', fromlist=['main', 'parser'])),
-            ('partition', __import__('slim.partition', fromlist=['main', 'parser'])),
-            ('validate', __import__('slim.validate', fromlist=['main', 'parser'])),
-            ('update-installation', __import__('slim.update_installation', fromlist=['main', 'parser']))
+        ("config", __import__("slim.config", fromlist=["main", "parser"])),
+        ("describe", __import__("slim.describe", fromlist=["main", "parser"])),
+        (
+            "generate-manifest",
+            __import__("slim.generate_manifest", fromlist=["main", "parser"]),
+        ),
+        ("package", __import__("slim.package", fromlist=["main", "parser"])),
+        ("partition", __import__("slim.partition", fromlist=["main", "parser"])),
+        ("validate", __import__("slim.validate", fromlist=["main", "parser"])),
+        (
+            "update-installation",
+            __import__("slim.update_installation", fromlist=["main", "parser"]),
+        ),
     ):
         parent = command_module.parser
-        prog = parser.prog + ' ' + name
+        prog = parser.prog + " " + name
 
         command_parser = command_parsers.add_parser(
-            name, prog=prog, usage=parser.usage, conflict_handler=parser.conflict_handler,
-            formatter_class=parser.formatter_class, fromfile_prefix_chars=parser.fromfile_prefix_chars,
-            prefix_chars=parser.prefix_chars, parents=[parent], description=parent.description, epilog=parent.epilog,
-            argument_default=parent.argument_default, help=parent.description, add_help=False
+            name,
+            prog=prog,
+            usage=parser.usage,
+            conflict_handler=parser.conflict_handler,
+            formatter_class=parser.formatter_class,
+            fromfile_prefix_chars=parser.fromfile_prefix_chars,
+            prefix_chars=parser.prefix_chars,
+            parents=[parent],
+            description=parent.description,
+            epilog=parent.epilog,
+            argument_default=parent.argument_default,
+            help=parent.description,
+            add_help=False,
         )
-        command_parser.set_defaults(command_name=command_parser.prog, invoke_command=command_module.main)
+        command_parser.set_defaults(
+            command_name=command_parser.prog, invoke_command=command_module.main
+        )
 
     return parser
 
 
 argument_parser = new_argument_parser()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv)

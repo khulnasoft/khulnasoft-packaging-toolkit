@@ -759,8 +759,8 @@ tools.sessions.secure = [True | False]
 tools.sessions.forceSecure = [True | False]
 * NOTE: this setting only takes effect when appServerPorts is set to a
         non-zero value
-* If the client connects with HTTPS to a proxy server and the back end 
-  connects to Khulnasoft via HTTP, set this attribute to "True" so that 
+* If the client connects with HTTPS to a proxy server and the back end
+  connects to Khulnasoft via HTTP, set this attribute to "True" so that
   session cookie sent over HTTPS to the client has the secure bit set
 * Defaults to False
 

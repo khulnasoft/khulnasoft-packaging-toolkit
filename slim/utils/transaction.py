@@ -7,12 +7,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from contextlib import contextmanager
 
-from . public import SlimStatus
-from . logger import SlimLogger
-from . payload import SlimPayloadLoggingHandler
-from . _configuration import slim_configuration
+from .public import SlimStatus
+from .logger import SlimLogger
+from .payload import SlimPayloadLoggingHandler
+from ._configuration import slim_configuration
 
-__all__ = ['slim_transaction']
+__all__ = ["slim_transaction"]
 
 
 @contextmanager
@@ -28,7 +28,9 @@ def slim_transaction():
 
         # Add the SLIM payload object as a logging handler
         payload_logging_handler = SlimPayloadLoggingHandler(slim_configuration.payload)
-        payload_logging_handler.sanitize_messages(paths=slim_configuration.sanitized_paths)
+        payload_logging_handler.sanitize_messages(
+            paths=slim_configuration.sanitized_paths
+        )
         payload_logging_handler.payload.reset()
 
         SlimLogger.add_handler(payload_logging_handler)
@@ -36,7 +38,7 @@ def slim_transaction():
         yield  # execute code within the "with" statement
 
     except SystemExit:
-        pass   # expected exception to known errors
+        pass  # expected exception to known errors
 
     finally:
         # Set the status bit to failed if we logged any errors

@@ -11,13 +11,13 @@ import logging
 import sys
 from os.path import basename, splitext
 
-from . internal import string
+from .internal import string
 
-__all__ = ['SlimLogger', 'SlimExternalFormatter']
+__all__ = ["SlimLogger", "SlimExternalFormatter"]
 
 
 logging.STEP = logging.INFO - 1
-logging.addLevelName(logging.STEP, 'STEP')
+logging.addLevelName(logging.STEP, "STEP")
 
 
 class SlimFormatter(logging.Formatter):
@@ -31,16 +31,16 @@ class SlimFormatter(logging.Formatter):
         logging.Formatter.__init__(self, formatstr)
 
     def format(self, record):
-        record.levelname = self._level_names.get(record.levelno, ' ')
-        record.msg = '%s' * len(record.args)
+        record.levelname = self._level_names.get(record.levelno, " ")
+        record.msg = "%s" * len(record.args)
         return logging.Formatter.format(self, record)
 
     _level_names = {
-        logging.DEBUG: ' [DEBUG] ',
-        logging.INFO:  ' [INFO] ',
-        logging.WARN:  ' [WARNING] ',
-        logging.ERROR: ' [ERROR] ',
-        logging.FATAL: ' [FATAL] '
+        logging.DEBUG: " [DEBUG] ",
+        logging.INFO: " [INFO] ",
+        logging.WARN: " [WARNING] ",
+        logging.ERROR: " [ERROR] ",
+        logging.FATAL: " [FATAL] ",
     }
 
 
@@ -55,7 +55,7 @@ class SlimExternalFormatter(logging.Formatter):
         logging.Formatter.__init__(self, formatstr)
 
     def format(self, record):
-        record.msg = '%s' * len(record.args)
+        record.msg = "%s" * len(record.args)
         return logging.Formatter.format(self, record)
 
 
@@ -81,19 +81,28 @@ class SlimLogger(object):
     @classmethod
     def fatal(cls, *args, **kwargs):
 
-        exception_info = kwargs.get('exception_info')
+        exception_info = kwargs.get("exception_info")
 
         if exception_info is None:
             cls._emit(logging.FATAL, *args)
         else:
             error_type, error_value, traceback = exception_info
 
-            message = string(error_type.__name__ if error_value is None else error_value)
+            message = string(
+                error_type.__name__ if error_value is None else error_value
+            )
 
             if cls._debug:
-                message += '\nTraceback: ' + error_type.__name__ + '\n' + ''.join(format_tb(traceback))
+                message += (
+                    "\nTraceback: "
+                    + error_type.__name__
+                    + "\n"
+                    + "".join(format_tb(traceback))
+                )
 
-            cls._emit(logging.FATAL, *(args + (': ', message)) if len(args) > 0 else message)
+            cls._emit(
+                logging.FATAL, *(args + (": ", message)) if len(args) > 0 else message
+            )
 
         sys.exit(1)
 
@@ -112,7 +121,11 @@ class SlimLogger(object):
     @classmethod
     def message(cls, level, *args, **kwargs):
         if str(level) == level:
-            level = logging.INFO if level not in cls._level_names else cls._level_names[level.upper()]
+            level = (
+                logging.INFO
+                if level not in cls._level_names
+                else cls._level_names[level.upper()]
+            )
         if level != logging.FATAL:
             cls._emit(level, *args)
             return
@@ -147,7 +160,9 @@ class SlimLogger(object):
 
     @classmethod
     def set_command_name(cls, command_name):
-        cls._adapter = logging.LoggerAdapter(cls._logger, {'command_name': command_name})
+        cls._adapter = logging.LoggerAdapter(
+            cls._logger, {"command_name": command_name}
+        )
 
     # endregion
 
@@ -175,28 +190,30 @@ class SlimLogger(object):
     # region Privates
 
     _debug = False  # turns on debug output which is different than turning on debug messages using, e.g., set_level
-    _default_level = logging.STEP  # call SlimLogger.set_level to change (works in tandem with SlimLogger.set_quiet)
+    _default_level = (
+        logging.STEP
+    )  # call SlimLogger.set_level to change (works in tandem with SlimLogger.set_quiet)
 
     _message_count = {
-        logging.STEP:  0,
+        logging.STEP: 0,
         logging.DEBUG: 0,
-        logging.INFO:  0,
-        logging.WARN:  0,
+        logging.INFO: 0,
+        logging.WARN: 0,
         logging.ERROR: 0,
-        logging.FATAL: 0
+        logging.FATAL: 0,
     }
 
     # This is a copy of logging/__init__.py:_levelNames because the logging library does not expose this mapping
     # It only exposes the number => string mapping via getLevelName()
     _level_names = {
-        'CRITICAL': logging.CRITICAL,
-        'ERROR': logging.ERROR,
-        'WARN': logging.WARNING,
-        'WARNING': logging.WARNING,
-        'INFO': logging.INFO,
-        'DEBUG': logging.DEBUG,
-        'STEP': logging.STEP,  # custom logging level
-        'NOTE': logging.INFO,  # backwards compatibility
+        "CRITICAL": logging.CRITICAL,
+        "ERROR": logging.ERROR,
+        "WARN": logging.WARNING,
+        "WARNING": logging.WARNING,
+        "INFO": logging.INFO,
+        "DEBUG": logging.DEBUG,
+        "STEP": logging.STEP,  # custom logging level
+        "NOTE": logging.INFO,  # backwards compatibility
     }
 
     # noinspection PyShadowingNames
@@ -212,17 +229,17 @@ class SlimLogger(object):
         if not command_name:
             # Make sure we have a non-empty command name, even when loaded as a library
             # The command name is used to grab and configure a unique non-root logger
-            command_name = 'slim'
+            command_name = "slim"
 
         logger = logging.getLogger(command_name)
         logger.setLevel(logging.STEP)
         logger.propagate = False  # do not try to use parent logging handlers
 
         handler = logging.StreamHandler()
-        handler.setFormatter(SlimFormatter('%(command_name)s:%(levelname)s%(message)s'))
+        handler.setFormatter(SlimFormatter("%(command_name)s:%(levelname)s%(message)s"))
         logger.addHandler(handler)
 
-        adapter = logging.LoggerAdapter(logger, {'command_name': command_name})
+        adapter = logging.LoggerAdapter(logger, {"command_name": command_name})
 
         return logger, handler, adapter
 

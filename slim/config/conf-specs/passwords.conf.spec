@@ -4,7 +4,7 @@
 #
 # There is no global, default passwords.conf. Instead, anytime a user creates
 # a new user or edit a user onwards hitting the storage endpoint
-# will create this passwords.conf file which gets replicated 
+# will create this passwords.conf file which gets replicated
 # in a search head clustering enviornment.
 # Note that passwords.conf is only created from 6.3.0 release.
 #

@@ -19,17 +19,16 @@ from future.utils import with_metaclass
 from semantic_version import Version, Spec
 
 from slim.utils.public import SlimTargetOSWildcard
-from .. utils import *
-from .. utils.internal import string
+from ..utils import *
+from ..utils.internal import string
 
-from . _configuration import AppConfiguration
-from . _deployment import AppDeploymentSpecification
-from . _internal import ObjectView
-from . _manifest import AppManifest, AppDeploymentConverter
+from ._configuration import AppConfiguration
+from ._deployment import AppDeploymentSpecification
+from ._internal import ObjectView
+from ._manifest import AppManifest, AppDeploymentConverter
 
 
 class _AppSourceFactory(ABCMeta):
-
     def __call__(cls, *args, **kwargs):
         package_path = args[0]
         if path.isdir(package_path):
@@ -49,27 +48,45 @@ class _AppSourceFactory(ABCMeta):
 class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
 
     __slots__ = (
-        '_configuration', '_container', '_dependencies', '_dependency_sources', '_directory', '_id', '_manifest',
-        '_package_prefix', '_qualified_id', '_version'
+        "_configuration",
+        "_container",
+        "_dependencies",
+        "_dependency_sources",
+        "_directory",
+        "_id",
+        "_manifest",
+        "_package_prefix",
+        "_qualified_id",
+        "_version",
     )
 
     def __init__(self, package, local_conf=None):
-        """ Get an AppSource object given a source package/directory, maybe from the cache.
+        """Get an AppSource object given a source package/directory, maybe from the cache.
 
         Local configuration can be provided to update the app source. Caller is required to check for logged errors.
 
         """
         # pylint: disable=non-parent-init-called
-        ObjectView.__init__(self, (
-            ('package', path.abspath(package)),
-            ('local_conf', None if local_conf is None else path.abspath(local_conf))
-        ))  # pylint: disable=protected-access
-        self._configuration = self._container = self._dependencies = self._dependency_sources = self._directory = None
-        self._id = self._manifest = self._package_prefix = self._qualified_id = self._version = None
+        ObjectView.__init__(
+            self,
+            (
+                ("package", path.abspath(package)),
+                (
+                    "local_conf",
+                    None if local_conf is None else path.abspath(local_conf),
+                ),
+            ),
+        )  # pylint: disable=protected-access
+        self._configuration = (
+            self._container
+        ) = self._dependencies = self._dependency_sources = self._directory = None
+        self._id = (
+            self._manifest
+        ) = self._package_prefix = self._qualified_id = self._version = None
         self._description = None
 
         if not path.exists(self.package):
-            SlimLogger.error('Package not found: ', self.package)
+            SlimLogger.error("Package not found: ", self.package)
             return  # do not try to validate a package that does not exist
 
         self._validate_input_groups()
@@ -102,7 +119,7 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
 
     @property
     def container(self):
-        return self._get_field_value('_container')
+        return self._get_field_value("_container")
 
     @property
     def dependencies(self):
@@ -110,7 +127,7 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
 
     @property
     def dependency_sources(self):
-        return self._get_field_value('_dependency_sources')
+        return self._get_field_value("_dependency_sources")
 
     @property
     def description(self):
@@ -122,24 +139,26 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
 
             app_manifest = self.manifest
             # pylint: disable=protected-access
-            description = ObjectView._to_dict((
-                ('info', app_manifest.info),
-                ('dependencies', app_manifest.dependencies),
-                ('tasks', app_manifest.tasks),
-                ('input_groups', app_manifest.inputGroups),
-                ('incompatible_apps', app_manifest.incompatibleApps),
-                ('platform_requirements', app_manifest.platformRequirements),
-                ('supported_deployments', app_manifest.supportedDeployments),
-                ('schema_version', app_manifest.schemaVersion),
-                ('generated', not app_manifest.loaded)
-            ))
+            description = ObjectView._to_dict(
+                (
+                    ("info", app_manifest.info),
+                    ("dependencies", app_manifest.dependencies),
+                    ("tasks", app_manifest.tasks),
+                    ("input_groups", app_manifest.inputGroups),
+                    ("incompatible_apps", app_manifest.incompatibleApps),
+                    ("platform_requirements", app_manifest.platformRequirements),
+                    ("supported_deployments", app_manifest.supportedDeployments),
+                    ("schema_version", app_manifest.schemaVersion),
+                    ("generated", not app_manifest.loaded),
+                )
+            )
             self._description = description
 
         return description
 
     @property
     def directory(self):
-        return self._get_field_value('_directory')
+        return self._get_field_value("_directory")
 
     # pylint: disable=invalid-name
     @property
@@ -147,20 +166,26 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
         value = self._id
         if value is None:
             identity = self.manifest.info.id
-            value = self._id = '-'.join(value for value in (identity.group, identity.name) if value is not None)
+            value = self._id = "-".join(
+                value for value in (identity.group, identity.name) if value is not None
+            )
         return value
 
     @property
     def manifest(self):
-        return self._get_field_value('_manifest')
+        return self._get_field_value("_manifest")
 
     @property
     def package_prefix(self):
         value = self._package_prefix
         if value is None:
             app_id = self.manifest.info.id.get
-            value = self._package_prefix = '-'.join(
-                [string(part) for part in [app_id('group'), app_id('name'), app_id('version')] if part is not None]
+            value = self._package_prefix = "-".join(
+                [
+                    string(part)
+                    for part in [app_id("group"), app_id("name"), app_id("version")]
+                    if part is not None
+                ]
             )
         return value
 
@@ -168,7 +193,9 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
     def qualified_id(self):
         value = self._qualified_id
         if value is None:
-            value = self._qualified_id = self.id + ':' + string(self.manifest.info.id.version)
+            value = self._qualified_id = (
+                self.id + ":" + string(self.manifest.info.id.version)
+            )
         return value
 
     @property
@@ -200,7 +227,9 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
                 yield app_id, app
                 continue
 
-    def populate_dependency_sources(self, app_dependencies_dir, installed_packages=None):
+    def populate_dependency_sources(
+        self, app_dependencies_dir, installed_packages=None
+    ):
         """
         Populates the AppSource dependencies from the given directory, into more AppSource objects.  Returns all
         *nested* dependencies, required for the AppDependencyGraph operations.
@@ -235,7 +264,7 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
 
     def validate_deployment_specification(self, deployment_specification):
 
-        input_groups = self.manifest.get('inputGroups')
+        input_groups = self.manifest.get("inputGroups")
 
         # TODO: Invert these two methods by way of methods on a deployment specification, something like this:
         #
@@ -244,14 +273,21 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
         #
         # Think about the possibility of a single method, not two methods as indicated above
 
-        if AppDeploymentSpecification.is_all_input_groups(deployment_specification.inputGroups):
+        if AppDeploymentSpecification.is_all_input_groups(
+            deployment_specification.inputGroups
+        ):
             return
-        if AppDeploymentSpecification.are_no_input_groups(deployment_specification.inputGroups):
+        if AppDeploymentSpecification.are_no_input_groups(
+            deployment_specification.inputGroups
+        ):
             return
         if input_groups is None:
             SlimLogger.error(
-                'Deployment specification includes input groups, but ', self.qualified_id, ' defines no input groups: ',
-                deployment_specification)
+                "Deployment specification includes input groups, but ",
+                self.qualified_id,
+                " defines no input groups: ",
+                deployment_specification,
+            )
             return
 
         for name in deployment_specification.inputGroups:
@@ -260,23 +296,28 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
                     raise AttributeError
             except AttributeError:
                 SlimLogger.error(
-                    'Deployment specification requests group ', encode_string(name), ' but that group is not defined '
-                    'by ', self.qualified_id, ': ', deployment_specification)
+                    "Deployment specification requests group ",
+                    encode_string(name),
+                    " but that group is not defined " "by ",
+                    self.qualified_id,
+                    ": ",
+                    deployment_specification,
+                )
 
     # endregion
 
     # region Protected
 
     _file_types = {
-        b'0': 'regular file',
-        b'\0': 'regular file',
-        b'1': 'link',
-        b'2': 'symbolic link',
-        b'3': 'character special device',
-        b'4': 'block special device',
-        b'5': 'directory',
-        b'6': 'FIFO special device',
-        b'7': 'contiguous file'
+        b"0": "regular file",
+        b"\0": "regular file",
+        b"1": "link",
+        b"2": "symbolic link",
+        b"3": "character special device",
+        b"4": "block special device",
+        b"5": "directory",
+        b"6": "FIFO special device",
+        b"7": "contiguous file",
     }
 
     def _extract_source(self):
@@ -284,13 +325,19 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
         package_name = path.basename(self.package)
         file_type = AppSource._file_type
 
-        if package_name.endswith('.tar.gz'):
-            package_name = package_name[:-len('.tar.gz')]
-        elif package_name.endswith('.tgz') or package_name.endswith('.tar') or package_name.endswith('.spl'):
-            package_name = package_name[:-len('.spl')]
+        if package_name.endswith(".tar.gz"):
+            package_name = package_name[: -len(".tar.gz")]
+        elif (
+            package_name.endswith(".tgz")
+            or package_name.endswith(".tar")
+            or package_name.endswith(".spl")
+        ):
+            package_name = package_name[: -len(".spl")]
 
-        app_container = path.join(slim_configuration.cache.cache_path, package_name + '.source')
-        app_root = ''
+        app_container = path.join(
+            slim_configuration.cache.cache_path, package_name + ".source"
+        )
+        app_root = ""
 
         with tarfile.open(self.package) as package:
 
@@ -299,18 +346,26 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
             member = package.next()
 
             if member is None:
-                raise SlimError(package.name, ': Expected a source package, not an empty tar archive')
+                raise SlimError(
+                    package.name,
+                    ": Expected a source package, not an empty tar archive",
+                )
 
             app_root = member.name
             parent = path.dirname(app_root)
 
-            if parent == '':
+            if parent == "":
                 if not member.isdir():
                     raise SlimError(
-                        package.name, ': Expected the first member of this source package to be a directory, but it is '
-                        'a ', file_type(member), ': ', app_root)
+                        package.name,
+                        ": Expected the first member of this source package to be a directory, but it is "
+                        "a ",
+                        file_type(member),
+                        ": ",
+                        app_root,
+                    )
             else:
-                while parent not in ('', '.'):
+                while parent not in ("", "."):
                     app_root = parent
                     parent = path.dirname(app_root)
 
@@ -337,10 +392,10 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
         try:
             return cls._file_types[type_code]
         except KeyError:
-            return 'file of type ' + string(type_code)
+            return "file of type " + string(type_code)
 
     def _get_field_value(self, name):
-        """ Common get function for top-level fields: _container, _dependency_sources, _directory.
+        """Common get function for top-level fields: _container, _dependency_sources, _directory.
 
         If the field does not exist, the fields have not been initialized based on the app_root type. Extract the
         app_root tarball or initialize the fields to default values.
@@ -363,25 +418,37 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
 
             # Load or generate app manifest
 
-            filename = path.join(self.directory, 'app.manifest')
+            filename = path.join(self.directory, "app.manifest")
 
             if path.isfile(filename):
                 app_manifest = AppManifest.load(filename)
             else:
-                SlimLogger.information('Generating app manifest for ' + os.path.basename(self.package) + '...')
-                app_configuration = self._configuration = AppConfiguration.load(self.directory)
-                app_manifest = AppManifest.generate(app_configuration, io.open(filename, 'wb'), add_defaults=False)
+                SlimLogger.information(
+                    "Generating app manifest for "
+                    + os.path.basename(self.package)
+                    + "..."
+                )
+                app_configuration = self._configuration = AppConfiguration.load(
+                    self.directory
+                )
+                app_manifest = AppManifest.generate(
+                    app_configuration, io.open(filename, "wb"), add_defaults=False
+                )
 
             self._manifest = app_manifest
 
             # Construct collection of app dependency sources (after we have the other values set)
 
-            app_dependencies_dir = path.abspath(path.join(self.container, SlimConstants.DEPENDENCIES_DIR))
+            app_dependencies_dir = path.abspath(
+                path.join(self.container, SlimConstants.DEPENDENCIES_DIR)
+            )
 
             if not path.exists(app_dependencies_dir):
                 app_dependencies_dir = path.abspath(slim_configuration.repository_path)
 
-            self._dependency_sources = self.populate_dependency_sources(app_dependencies_dir)
+            self._dependency_sources = self.populate_dependency_sources(
+                app_dependencies_dir
+            )
             value = getattr(self, name)
 
         return value
@@ -390,7 +457,7 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
     def _validate_input_groups(self):
 
         input_groups = self.manifest.inputGroups
-        inputs = self.configuration.get('inputs')
+        inputs = self.configuration.get("inputs")
 
         if input_groups is not None:
 
@@ -405,14 +472,30 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
                         continue
                     if len(input_names) == 1:
                         SlimLogger.warning(
-                            self.package, ': ', self.qualified_id, ' manifest lists this undefined input in forwarder '
-                            'group ', encode_string(group_name), ': ',
-                            encode_string(input_names[0]))
+                            self.package,
+                            ": ",
+                            self.qualified_id,
+                            " manifest lists this undefined input in forwarder "
+                            "group ",
+                            encode_string(group_name),
+                            ": ",
+                            encode_string(input_names[0]),
+                        )
                     else:
                         SlimLogger.warning(
-                            self.package, ': ', self.qualified_id, ' manifest lists these undefined inputs in '
-                            'input group ', encode_string(group_name), ': ',
-                            encode_series((encode_string(input_name) for input_name in input_names)))
+                            self.package,
+                            ": ",
+                            self.qualified_id,
+                            " manifest lists these undefined inputs in " "input group ",
+                            encode_string(group_name),
+                            ": ",
+                            encode_series(
+                                (
+                                    encode_string(input_name)
+                                    for input_name in input_names
+                                )
+                            ),
+                        )
             else:
 
                 # Verify that no input group has undefined inputs
@@ -426,8 +509,15 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
                         if inputs.has(input_name):
                             continue
                         SlimLogger.warning(
-                            self.package, ': ', self.qualified_id, ' manifest lists this undefined input in forwarder '
-                            'group ', encode_string(group_name), ': ', encode_string(input_name))
+                            self.package,
+                            ": ",
+                            self.qualified_id,
+                            " manifest lists this undefined input in forwarder "
+                            "group ",
+                            encode_string(group_name),
+                            ": ",
+                            encode_string(input_name),
+                        )
 
             # Verify that all input group dependencies are listed in the dependencies section
             # It is an error, not a warning because we cannot deploy without them
@@ -444,9 +534,18 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
                     if dependencies and dependency_name in dependencies:
                         continue
                     SlimLogger.error(
-                        self.package, ': ', self.qualified_id, ' manifest declares that input group ', group_name,
-                        ' requires ', dependency_name, ', but ', dependency_name, ' is not declared to be a '
-                        'dependency of ', self.qualified_id)
+                        self.package,
+                        ": ",
+                        self.qualified_id,
+                        " manifest declares that input group ",
+                        group_name,
+                        " requires ",
+                        dependency_name,
+                        ", but ",
+                        dependency_name,
+                        " is not declared to be a " "dependency of ",
+                        self.qualified_id,
+                    )
                     remove_list.append(dependency_name)
                 for dependency_name in remove_list:
                     del group_requires[dependency_name]
@@ -461,19 +560,23 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
             if version is not None:
                 try:
                     # noinspection PyProtectedMember
-                    version._setting._value = Version.coerce(version.value)  # pylint: disable=all
+                    version._setting._value = Version.coerce(
+                        version.value
+                    )  # pylint: disable=all
                 except ValueError:
                     # TODO: Dnoble: incorporate this logic into FilePosition.__str__:
                     # file, line = version.position.file, version.position.line
                     # file = file[len(path.commonprefix((file, path.dirname(self.directory)))) + 1:]
                     # position = FilePosition(file, line)
-                    SlimLogger.error(version.position, ': Expected version number, not ', version)
+                    SlimLogger.error(
+                        version.position, ": Expected version number, not ", version
+                    )
                     # SPL-180633: making behaviour the same as in _manifest.py
-                    version._setting._value = Version.coerce('0.0.0')
+                    version._setting._value = Version.coerce("0.0.0")
             return group, name, version
 
         if self.manifest.info is None:
-            SlimLogger.error('App manifest info is missing or incorrect')
+            SlimLogger.error("App manifest info is missing or incorrect")
             return
 
         manifest_id = self.manifest.info.id
@@ -482,11 +585,13 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
         assert manifest_id.name is not None
         assert manifest_id.version is not None
 
-        conf = self.configuration.get('app')
+        conf = self.configuration.get("app")
 
         if conf is not None:
-            legacy_id = to_app_id((None, conf.get('package', 'id'), conf.get('launcher', 'version')))
-            configuration_id = to_app_id(conf.get('id', ('group', 'name', 'version')))
+            legacy_id = to_app_id(
+                (None, conf.get("package", "id"), conf.get("launcher", "version"))
+            )
+            configuration_id = to_app_id(conf.get("id", ("group", "name", "version")))
 
             if configuration_id == (None, None, None):
                 group, name, version = legacy_id
@@ -497,33 +602,63 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
                     name = legacy_id[1]
                 elif legacy_id[1] is not None and name != legacy_id[1]:
                     SlimLogger.error(
-                        name.position, ': App ', name, ' does not match ', legacy_id[1], ' at ', legacy_id[1].position)
+                        name.position,
+                        ": App ",
+                        name,
+                        " does not match ",
+                        legacy_id[1],
+                        " at ",
+                        legacy_id[1].position,
+                    )
 
                 if version is None:
                     version = legacy_id[2]
                 elif legacy_id[2] is not None and version != legacy_id[2]:
                     SlimLogger.error(
-                        version.position, ': App ', version, ' does not match ', legacy_id[2], ' at ',
-                        legacy_id[2].position)
+                        version.position,
+                        ": App ",
+                        version,
+                        " does not match ",
+                        legacy_id[2],
+                        " at ",
+                        legacy_id[2].position,
+                    )
 
             if group is not None and group.value != manifest_id.group:
                 SlimLogger.error(
-                    group.position, ': App ', group, ' does not match manifest.info.id.group = ', manifest_id.group)
+                    group.position,
+                    ": App ",
+                    group,
+                    " does not match manifest.info.id.group = ",
+                    manifest_id.group,
+                )
 
             if name is not None and name.value != manifest_id.name:
                 SlimLogger.error(
-                    name.position, ': App ', name, ' does not match manifest.info.id.name = ', manifest_id.name)
+                    name.position,
+                    ": App ",
+                    name,
+                    " does not match manifest.info.id.name = ",
+                    manifest_id.name,
+                )
 
             if version is not None and version.value != manifest_id.version:
                 SlimLogger.error(
-                    version.position, ': App ', version, ' does not match manifest.info.id.version = ',
-                    manifest_id.version)
+                    version.position,
+                    ": App ",
+                    version,
+                    " does not match manifest.info.id.version = ",
+                    manifest_id.version,
+                )
 
         app_root = path.basename(self.directory)
 
         if app_root != self.id:
             SlimLogger.error(
-                'App folder name ', encode_filename(app_root), ' does not match App ID ', encode_filename(self.id)
+                "App folder name ",
+                encode_filename(app_root),
+                " does not match App ID ",
+                encode_filename(self.id),
             )
 
     @classmethod
@@ -534,27 +669,53 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
 
         if member.name != SlimConstants.DEPENDENCIES_DIR:
             raise SlimError(
-                package_name, ': Expected all members of this source package to be contained by ', app_root, ' or its ',
-                SlimConstants.DEPENDENCIES_DIR, ' directory, but this file is not: ', member.name)
+                package_name,
+                ": Expected all members of this source package to be contained by ",
+                app_root,
+                " or its ",
+                SlimConstants.DEPENDENCIES_DIR,
+                " directory, but this file is not: ",
+                member.name,
+            )
 
         if not member.isdir():
-            raise SlimError(package_name, ': Expected ', SlimConstants.DEPENDENCIES_DIR, ' to be a directory, '
-                            'but it is a ', cls._file_type(member))
+            raise SlimError(
+                package_name,
+                ": Expected ",
+                SlimConstants.DEPENDENCIES_DIR,
+                " to be a directory, " "but it is a ",
+                cls._file_type(member),
+            )
 
         return cls._validate_tarinfo_of_packaged_dependencies
 
     @classmethod
     def _validate_tarinfo_of_packaged_dependencies(cls, member, app_root, package_name):
 
-        if not path.commonprefix((SlimConstants.DEPENDENCIES_DIR, member.name)) == SlimConstants.DEPENDENCIES_DIR:
+        if (
+            not path.commonprefix((SlimConstants.DEPENDENCIES_DIR, member.name))
+            == SlimConstants.DEPENDENCIES_DIR
+        ):
             raise SlimError(
-                package_name, ': Expected all members of this source package to be contained by ', app_root, ' or its ',
-                SlimConstants.DEPENDENCIES_DIR, ' directory, but this file is not: ', member.name)
+                package_name,
+                ": Expected all members of this source package to be contained by ",
+                app_root,
+                " or its ",
+                SlimConstants.DEPENDENCIES_DIR,
+                " directory, but this file is not: ",
+                member.name,
+            )
 
         if not member.isfile():
             raise SlimError(
-                package_name, ': Expected all members of the ', SlimConstants.DEPENDENCIES_DIR, ' directory to be '
-                'tar archives, but this is a ', cls._file_type(member), ': ', member.name)
+                package_name,
+                ": Expected all members of the ",
+                SlimConstants.DEPENDENCIES_DIR,
+                " directory to be " "tar archives, but this is a ",
+                cls._file_type(member),
+                ": ",
+                member.name,
+            )
 
         return cls._validate_tarinfo_of_packaged_dependencies
 
@@ -562,13 +723,21 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
         tasks = self.manifest.tasks
 
         if tasks is not None:
-            inputs = self.configuration.get('inputs')
-            undefined_tasks = tasks if inputs is None else [task for task in tasks if inputs.has(task) is False]
+            inputs = self.configuration.get("inputs")
+            undefined_tasks = (
+                tasks
+                if inputs is None
+                else [task for task in tasks if inputs.has(task) is False]
+            )
 
             if len(undefined_tasks) > 0:
                 SlimLogger.warning(
-                    self.package, ': ', self.qualified_id, ' manifest lists these undefined tasks: ',
-                    encode_series((encode_string(task) for task in undefined_tasks)))
+                    self.package,
+                    ": ",
+                    self.qualified_id,
+                    " manifest lists these undefined tasks: ",
+                    encode_series((encode_string(task) for task in undefined_tasks)),
+                )
 
     def _validate_deployments(self):
         schema_version = self.manifest.schemaVersion
@@ -578,11 +747,15 @@ class AppSource(with_metaclass(_AppSourceFactory, ObjectView)):
         # supports the deployment specification and we loaded the manifest from a file
         # ie, if we generated this manifest on the fly then this field is not required
         version_spec = Spec(AppDeploymentConverter.schema_version_spec)
-        if self.manifest.loaded and not deployments and version_spec.match(schema_version):
+        if (
+            self.manifest.loaded
+            and not deployments
+            and version_spec.match(schema_version)
+        ):
             SlimLogger.error(
                 path.basename(self.package),
-                ': Expected at least one supported deployment type to be defined. '
-                'Update the app.manifest to include the supportedDeployments field.'
+                ": Expected at least one supported deployment type to be defined. "
+                "Update the app.manifest to include the supportedDeployments field.",
             )
 
     # endregion

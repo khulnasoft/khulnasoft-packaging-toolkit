@@ -92,7 +92,7 @@ KHULNASOFT_BINDIP=<ip address>
   method of restriction.
 * Overrides the Khulnasoftweb-specific web.conf/[settings]/server.socket_host
   param; the latter is preferred when KhulnasoftWeb behavior is the focus.
-* Defaults to unset. 
+* Defaults to unset.
 
 KHULNASOFT_IGNORE_SELINUX=true
 * If unset (not present), Khulnasoft on Linux will abort startup if it detects

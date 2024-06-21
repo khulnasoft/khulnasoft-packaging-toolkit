@@ -8,11 +8,11 @@ from builtins import next
 from os import path
 from json.encoder import encode_basestring as encode_string
 
-from . internal import string
+from .internal import string
 
 
 def encode_filename(filename):
-    """ Normalizes and double-quotes a filename
+    """Normalizes and double-quotes a filename
 
     Quotes within `filename` are backslash-escaped unless the system path separator is a backslash. In this case
     double-quotes within `filename` are converted to a sequence of two double-quotes.
@@ -24,11 +24,17 @@ def encode_filename(filename):
     :rtype: string
 
     """
-    return '"' + path.normpath(string(filename)).replace('"', '""' if path.sep == '\\' else r'\"') + '"'
+    return (
+        '"'
+        + path.normpath(string(filename)).replace(
+            '"', '""' if path.sep == "\\" else r"\""
+        )
+        + '"'
+    )
 
 
-def encode_series(series, coordinator='and'):
-    """ Joins two or more items in a series
+def encode_series(series, coordinator="and"):
+    """Joins two or more items in a series
 
     A comma separates items in the series, including the final item preceded by `coordinator` which should be a
     coordinating conjunction, typically :const:`'and'`, :const:`'or'`, or :const:`'nor'`.
@@ -64,16 +70,16 @@ def encode_series(series, coordinator='and'):
         count = 2
 
         for count, item in enumerate(iterator, 3):
-            yield ', '
+            yield ", "
             yield string(previous_item)
             previous_item = item
 
-        yield ' ' if count == 2 else ', '
+        yield " " if count == 2 else ", "
         yield coordinator
-        yield ' '
+        yield " "
         yield string(item)
 
-    return ''.join(items())
+    return "".join(items())
 
 
 def escape_non_alphanumeric_chars(pattern):

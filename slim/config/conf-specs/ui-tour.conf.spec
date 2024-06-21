@@ -4,7 +4,7 @@
 #
 # This file contains the tours available for Khulnasoft Onboarding
 #
-# There is a default ui-tour.conf in $KHULNASOFT_HOME/etc/system/default. 
+# There is a default ui-tour.conf in $KHULNASOFT_HOME/etc/system/default.
 # To create custom tours, place a ui-tour.conf in
 # $KHULNASOFT_HOME/etc/system/local/. To create custom tours for an app, place
 # ui-tour.conf in $KHULNASOFT_HOME/etc/apps/<app_name>/local/.

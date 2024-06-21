@@ -57,7 +57,7 @@ TCP Output stanzas
 [tcpout]
 
 defaultGroup = <target_group>, <target_group>, ...
-* Comma-separated list of one or more target group names, specified later 
+* Comma-separated list of one or more target group names, specified later
   in [tcpout:<target_group>] stanzas.
 * The forwarder sends all data to the specified groups.
 * If you don't want to forward data automatically, don't set this attribute.
@@ -369,7 +369,7 @@ forwardedindex.filter.disable = [true|false]
   forwarded.
 * Defaults to false.
 
-#----Automatic Load-Balancing 
+#----Automatic Load-Balancing
 autoLB = true
 * Automatic load balancing is the only way to forward data. Round-robin
   method is not supported anymore.
@@ -441,7 +441,7 @@ tlsHostname = <string>
 * TLS extension that allows sending an identifier with SSL Client Hello
 * Defaults to empty string
 
-sslCommonNameToCheck = <commonName1>, <commonName2>, ... 
+sslCommonNameToCheck = <commonName1>, <commonName2>, ...
 * Optional. Defaults to no common name checking.
 * Check the common name of the server's certificate against this name.
 * If there is no match, assume that Khulnasoft is not authenticated against this
@@ -593,7 +593,7 @@ priority = <priority_value> | NO_PRI
     7  Debug: debug-level messages
 
 syslogSourceType = <string>
-* Specifies an additional rule for handling data, in addition to that 
+* Specifies an additional rule for handling data, in addition to that
   provided by the 'syslog' source type.
 * This string is used as a substring match against the sourcetype key.  For
   example, if the string is set to 'syslog', then all source types
@@ -601,23 +601,23 @@ syslogSourceType = <string>
 * To match a source type explicitly, use the pattern
   "sourcetype::sourcetype_name".
     * Example: syslogSourceType = sourcetype::apache_common
-* Data which is 'syslog' or matches this setting is assumed to already be in 
-  syslog format. 
-* Data which does not match the rules has a header, optionally a timestamp 
-  (if defined in 'timestampformat'), and a hostname added to the front of 
-  the event. This is how Khulnasoft causes arbitrary log data to match syslog 
+* Data which is 'syslog' or matches this setting is assumed to already be in
+  syslog format.
+* Data which does not match the rules has a header, optionally a timestamp
+  (if defined in 'timestampformat'), and a hostname added to the front of
+  the event. This is how Khulnasoft causes arbitrary log data to match syslog
   expectations.
 * Defaults to unset.
 
 timestampformat = <format>
-* If specified, the formatted timestamps are added to the start of events 
+* If specified, the formatted timestamps are added to the start of events
   forwarded to syslog.
-* As above, this logic is only applied when the data is not syslog, or the 
+* As above, this logic is only applied when the data is not syslog, or the
   syslogSourceType.
-* If the data is not in syslog-compliant format and timestampformat is 
+* If the data is not in syslog-compliant format and timestampformat is
   not specified, the output produced will not be RFC3164-compliant.
-* The format is a strftime-style timestamp formatting string. This is the 
-  same implementation used in the 'eval' search command, khulnasoft logging, and 
+* The format is a strftime-style timestamp formatting string. This is the
+  same implementation used in the 'eval' search command, khulnasoft logging, and
   other places in khulnasoftd.
   * For example: %b %e %H:%M:%S for RFC3164-compliant output
     * %b - Abbreviated month name (Jan, Feb, ...)
@@ -664,7 +664,7 @@ maxEventSize = <integer>
 
 * Use the <unique_stanza_name> when creating your entry in transforms.conf.
 
-# Edit $KHULNASOFT_HOME/etc/system/local/transforms.conf and set rules to match your props.conf stanza: 
+# Edit $KHULNASOFT_HOME/etc/system/local/transforms.conf and set rules to match your props.conf stanza:
 #
 #  [<unique_stanza_name>]
 #  REGEX=<your_regex>

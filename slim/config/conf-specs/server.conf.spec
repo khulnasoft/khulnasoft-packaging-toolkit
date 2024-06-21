@@ -1493,7 +1493,7 @@ service_interval = <zero or positive integer>
 * A special default value of 0 indicates an auto mode where the service interval
   for the next service call is determined by the time taken by previous call.
   Service interval is bounded by the values 1 and max_auto_service_interval.
-  If previous service call takes more than max_auto_service_interval seconds, 
+  If previous service call takes more than max_auto_service_interval seconds,
   next service interval will be set to max_auto_service_interval seconds.
 
 cxn_timeout = <seconds>
@@ -1549,7 +1549,7 @@ re_add_on_bucket_request_error = true|false
   Instead, it updates the master with those buckets that master
   returned an error.
 * Defaults to false.
- 
+
 decommission_search_jobs_wait_secs = <seconds>
 * Valid only for mode=slave
 * Determines maximum time, in seconds, that a peer node waits for search
@@ -1661,7 +1661,7 @@ site_mappings = <comma-separated string>
   specified in available_sites.
   For example, if available_sites=site1,site2,site3,site4 and you decommission site2, you can
   map site2 to a remaining site such as site4, like this: site2:site4 .
-* If a site used in a mapping is later decommissioned, its previous mappings 
+* If a site used in a mapping is later decommissioned, its previous mappings
   must be remapped to an available site. For instance, if you have the mapping site1:site2
   but site2 is later decommissioned, you can remap both site1 and site2 to an active site3
   through the following replacement mappings - site1:site3,site2:site3 .
@@ -1841,7 +1841,7 @@ summary_replication = true|false|disabled
   disabled - summary replication is disabled; cannot be enabled at runtime.
 * Peers:
   true/false - no effect; the indexer will follow whatever setting is on the Cluster Master.
-  disabled - summary replication is disabled, indexer does no scanning 
+  disabled - summary replication is disabled, indexer does no scanning
              of summaries (increased performance during peers joing the cluster for large clusters)
 * Defaults to false for both Cluster Master and Peers.
 
@@ -1854,7 +1854,7 @@ rebalance_threshold = <number between 0.10 and 1.00>
 max_auto_service_interval = <positive integer>
 * Only valid for mode=master
 * Only valid when service_interval is in auto mode (i.e service_interval = 0)
-* Indicates the maximum value that service interval is bounded by when the 
+* Indicates the maximum value that service interval is bounded by when the
   service_interval is in auto mode. If the previous service call took more than
   max_auto_service_interval seconds, the next service call will run after
   max_auto_service_interval seconds.
@@ -1863,7 +1863,7 @@ max_auto_service_interval = <positive integer>
   the smaller of heartbeat_timeout or restart_timeout. For example,
   the default value of 30 is based on the default value of 60 for both
   heartbeat_timeout and restart_timeout.
- 
+
 buckets_to_summarize = <primaries | primaries_and_hot | all>
 * Only valid for mode=master
 * Determines which buckets we send '| summarize' searches (searches that build
@@ -2696,7 +2696,7 @@ captain_uri = [ static-captain-URI ]
 election = <bool>
 * This is used to classify a cluster as static or dynamic (RAFT based).
 * election = false means static captain, which is used for DR situation.
-* election = true means dynamic captain election enabled through RAFT protocol 
+* election = true means dynamic captain election enabled through RAFT protocol
 
 mode = <member>
 * Accepted values are captain and member, mode is used to identify the function of a node in
@@ -2737,7 +2737,7 @@ conf_replication_period = <int>
 * Controls how often, in seconds, a cluster member replicates configuration changes.
 * A value of 0 disables automatic replication of configuration changes.
 * Defaults to 5
-                                    
+
 conf_replication_max_pull_count = <int>
 * Controls the maximum number of configuration changes a member will
   replicate from the captain at one time.
@@ -2835,15 +2835,15 @@ artifact_status_fields = <field> ...
     * Default values user, app, label
 
 encrypt_fields = <field> ...
-    * These are the fields that need to be re-encrypted when Search Head Cluster 
-      does its own first time run on syncing all members with a new khulnasoft.secret key 
+    * These are the fields that need to be re-encrypted when Search Head Cluster
+      does its own first time run on syncing all members with a new khulnasoft.secret key
     * Give a comma separated fields as a triple elements <conf-file>:<stanza-prefix>:<key elem>
     * For matching all stanzas from a conf, leave the stanza-prefix empty, eg: "server: :pass4SymmKey" matches all stanzas with pass4SymmKey as key in server.conf
-    * Default values include storage/passwords, secret key for clustering/shclustering, server ssl config 
+    * Default values include storage/passwords, secret key for clustering/shclustering, server ssl config
 
-enable_jobs_data_lite = <bool> 
-*This is for memory reduction on the captain for Search head clustering, leads to lower memory 
-* in captain while slaves send the artifacts status.csv as a string. 
+enable_jobs_data_lite = <bool>
+*This is for memory reduction on the captain for Search head clustering, leads to lower memory
+* in captain while slaves send the artifacts status.csv as a string.
 * Default : false
 
 shcluster_label = <string>
@@ -3171,4 +3171,3 @@ replicate_search_peers = true|false
 * Add/remove search-server request is applied on all members
   of a search head cluster, when this value to set to true.
 * Require a healty search head cluster with a captain.
-

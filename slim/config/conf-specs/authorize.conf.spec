@@ -228,7 +228,7 @@ cumulativeRTSrchJobsQuota = <number>
 
 [capability::edit_indexer_cluster]
 * Required to edit or manage indexer cluster.
- 
+
 [capability::edit_input_defaults]
 * Required to change the default hostname for input data in the server
   settings endpoint.
@@ -377,7 +377,7 @@ cumulativeRTSrchJobsQuota = <number>
 
 [capability::list_indexer_cluster]
 * Required to list indexer cluster objects like buckets, peers etc.
- 
+
 [capability::list_inputs]
 * Required to view the list of various inputs.
 * This includes input from files, TCP, UDP, Scripts, etc.

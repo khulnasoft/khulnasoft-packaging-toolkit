@@ -78,10 +78,10 @@ min_batch_size_bytes = <integer>
 * Defaults to 20 MB.
 
 DelayArchiveProcessorShutdown = <bool>
-* Specifies whether during khulnasoft shutdown archive processor should finish processing archive file under process. 
+* Specifies whether during khulnasoft shutdown archive processor should finish processing archive file under process.
 * If set to false archive processor abandons further processing of archive file and will process again from start again.
-* If set to true archive processor will complete processing of archive file. Shutdown will be delayed. 
-* defaults to false 
+* If set to true archive processor will complete processing of archive file. Shutdown will be delayed.
+* defaults to false
 
 [searchresults]
 * This stanza controls search results for a variety of Khulnasoft search commands.
@@ -130,10 +130,10 @@ infocsv_log_level = [DEBUG|INFO|WARN|ERROR]
   will be added to info.csv
 
 show_warn_on_filtered_indexes = <boolean>
-* Log warnings if search returns no results because user has 
+* Log warnings if search returns no results because user has
   no permissions to search on queried indexes
 
-filteredindexes_log_level = [DEBUG|INFO|WARN|ERROR] 
+filteredindexes_log_level = [DEBUG|INFO|WARN|ERROR]
 * Log level of messages when search results no results because
   user has no permissions to search on queries indexes
 
@@ -470,7 +470,7 @@ ttl = <integer>
 failed_job_ttl = <integer>
 * How long search artifacts should be stored on disk once failed, in seconds. The ttl is computed
 * relative to the modtime of status.csv of the job if such file exists or the modtime of the search
-* job's artifact directory. If a job is being actively viewed in the Khulnasoft UI then the modtime of 
+* job's artifact directory. If a job is being actively viewed in the Khulnasoft UI then the modtime of
 * The status.csv file is constantly updated such that the reaper does not remove the job from underneath.
 * Defaults to 86400, which is equivalent to 24 hours.
 
@@ -570,7 +570,7 @@ min_preview_period = <integer>
 * Defaults to 1.
 
 max_preview_period = <integer>
-* This is the maximum time, in seconds, between previews. Used with the preview interval that 
+* This is the maximum time, in seconds, between previews. Used with the preview interval that
   is calculated with the preview_duty_cycle parameter. '0' indicates unlimited.
 * Defaults to 0.
 
@@ -620,7 +620,7 @@ max_macro_depth = <int>
 * Default is 100
 
 max_subsearch_depth = <int>
-* max recursion depth for subsearch 
+* max recursion depth for subsearch
 * considered a search exception if subsearch doesn't stop after this many levels
 
 realtime_buffer = <int>
@@ -699,10 +699,10 @@ fieldstats_update_maxperiod = <number>
 * defaults to 60
 
 timeline_events_preview = <bool>
-* Set timeline_events_preview to "true" to display events in the Search app as 
-  the events are scanned, including events that are in-memory and not yet committed, 
+* Set timeline_events_preview to "true" to display events in the Search app as
+  the events are scanned, including events that are in-memory and not yet committed,
   instead of waiting until all of the events are scanned to see the search results.
-* When set to "true", you will not be able to expand the event information in the 
+* When set to "true", you will not be able to expand the event information in the
   event viewer until events are committed.
 * When set to "false", events are displayed only after the events are committed
   (the events are written to the disk).
@@ -1079,7 +1079,7 @@ batch_search_max_pipeline = <int>
 batch_search_max_results_aggregator_queue_size = <int>
 * Controls the size of the search results queue to which all the search pipelines dump the processed search results.
 * Default size is set to 100MB.
-* Increasing the size can lead to performance gain where as decreasing can reduce search performance. 
+* Increasing the size can lead to performance gain where as decreasing can reduce search performance.
 * Do not set this parameter to zero.
 
 batch_search_max_serialized_results_queue_size = <int>
@@ -1145,15 +1145,15 @@ search_process_memory_usage_threshold = <double>
 * Signifies the maximum memory in MB the search process can consume in RAM.
 * Search processes violating the threshold will be terminated.
 * If the value is set to zero, then khulnasoft search processes are allowed
-  to grow unbounded in terms of in memory usage.  
+  to grow unbounded in terms of in memory usage.
 * The default value is set to 4000MB or 4GB.
 
 search_process_memory_usage_percentage_threshold = <float>
 * To be active, this setting requires setting: enable_memory_tracker = true
 * Signifies the percentage of the total memory the search process is entitled to consume.
 * Any time the search process violates the threshold percentage the process will be brought down.
-* If the value is set to zero, then khulnasoft search processes are allowed to grow unbounded 
-  in terms of percentage memory usage.  
+* If the value is set to zero, then khulnasoft search processes are allowed to grow unbounded
+  in terms of percentage memory usage.
 * The default value is set to 25%.
 * Any number set larger than 100 or less than 0 will be discarded and the default value will be used.
 
@@ -1182,30 +1182,30 @@ force_saved_search_dispatch_as_user = <bool>
 * If set to 'true', the 'dispatchAs' value is overwritten by 'user' regardless
   of the 'user | owner' value in the savedsearches.conf file.
 * If set to 'false', the value in the savedsearches.conf file is used.
-* User may want to set this to effectively disable dispatchAs = owner for 
+* User may want to set this to effectively disable dispatchAs = owner for
   the entire install, if that more closely aligns with security goals.
 * Defaults to false.
 
 bucket_localize_max_timeout_sec = <int>
-* The maximum amount of time, in seconds, to spend localizing a bucket stored in remote storage 
-* If the bucket contents (what's required for the search) cannot be localized in that time frame 
+* The maximum amount of time, in seconds, to spend localizing a bucket stored in remote storage
+* If the bucket contents (what's required for the search) cannot be localized in that time frame
 * the bucket will not be searched. Set to 0 for infinite amount of time.
 * This setting is only relevant when using remote storage.
 * Defaults to 300
 
 bucket_localize_status_check_period_ms = <int>
-* The amount of time, in milliseconds, between consecutive status checks to see if the needed bucket 
+* The amount of time, in milliseconds, between consecutive status checks to see if the needed bucket
 * contents required by the search have been localized
 * This setting is only relevant when using remote storage.
 * Defaults to 500
 
 bucket_localize_status_check_backoff_start_ms = <int>
-* When explicitly set, and different from bucket_localize_status_check_period_ms, 
+* When explicitly set, and different from bucket_localize_status_check_period_ms,
   enables exponential backoff between consecutive status checks for bucket
-  localization. Starting from the specified amount of time, in milliseconds, up to 
+  localization. Starting from the specified amount of time, in milliseconds, up to
   bucket_localize_status_check_period_ms.
 * This setting is only relevant when using remote storage.
-* Setting this option is beneficial when bucket contents localize quickly (e.g., in 
+* Setting this option is beneficial when bucket contents localize quickly (e.g., in
   less time than the minimal allowed value for bucket_localize_status_check_period_ms),
   or with high variability.
 * The minimum and maximum values are 1 and bucket_localize_status_check_period_ms,
@@ -1217,8 +1217,8 @@ bucket_localize_status_check_backoff_start_ms = <int>
 bucket_localize_max_lookahead = <int>
 * This setting is only relevant when using remote storage.
 * Specifies the maximum number of buckets the search command localizes
-  for look-ahead purposes, in addition to the required bucket. 
-* Increasing this value can improve performance, at the cost of additional 
+  for look-ahead purposes, in addition to the required bucket.
+* Increasing this value can improve performance, at the cost of additional
   network/io/disk utilization.
 * Valid values are 0-64. Any value larger than 64 will be set to 64. Other
   invalid values will be discarded and the default will be substituted.
@@ -1461,7 +1461,7 @@ sparkline_maxsize = <int>
 * Defaults to value of the list_maxsize setting
 
 sparkline_time_steps = <time-step-string>
-* Specify a set of time steps in order of decreasing granularity. Use an integer and 
+* Specify a set of time steps in order of decreasing granularity. Use an integer and
 * one of the following time units to indicate each step.
 ** s = seconds
 ** m = minutes
@@ -1469,17 +1469,17 @@ sparkline_time_steps = <time-step-string>
 ** d = days
 ** month
 * Defaults to: 1s,5s,10s,30s,1m,5m,10m,30m,1h,1d,1month
-* A time step from this list is selected based on the <sparkline_maxsize> setting. 
-* The lowest <sparkline_time_steps> value that does not exceed the maximum number 
+* A time step from this list is selected based on the <sparkline_maxsize> setting.
+* The lowest <sparkline_time_steps> value that does not exceed the maximum number
 * of bins is used.
 * Example:
 ** If you have the following configurations:
 ** <sparkline_time_steps> = 1s,5s,10s,30s,1m,5m,10m,30m,1h,1d,1month
 ** <sparkline_maxsize> = 100
-** The timespan for 7 days of data is 604,800 seconds. 
+** The timespan for 7 days of data is 604,800 seconds.
 ** Span = 604,800/<sparkline_maxsize>.
 ** If sparkline_maxsize = 100, then span = (604,800 / 100) = 60,480 sec == 1.68 hours.
-** The "1d" time step is used because it is the lowest value that does not exceed 
+** The "1d" time step is used because it is the lowest value that does not exceed
 ** the maximum number of bins.
 
 default_partitions = <int>
@@ -1495,14 +1495,14 @@ partitions_limit = <int>
 [thruput]
 
 maxKBps = <integer>
-* If specified and not zero, this limits the speed through the thruput processor 
+* If specified and not zero, this limits the speed through the thruput processor
   in the ingestion pipeline to the specified rate in kilobytes per second.
 * To control the CPU load while indexing, use this to throttle the number of
   events this indexer processes to the rate (in KBps) you specify.
-* Note that this limit will be applied per ingestion pipeline. For more information 
+* Note that this limit will be applied per ingestion pipeline. For more information
   about multiple ingestion pipelines see parallelIngestionPipelines in the
   server.conf.spec file.
-* With N parallel ingestion pipelines the thruput limit across all of the ingestion 
+* With N parallel ingestion pipelines the thruput limit across all of the ingestion
   pipelines will be N * maxKBps.
 
 [journal_compression]
@@ -1573,8 +1573,8 @@ indextime_lag = <unsigned int>
 
 max_replicated_hot_bucket_idle_time = <unsigned int>
 
-* Maximum amount of time, in seconds, a replicated hot bucket can be idle after which we won't 
-  apply indextime_lag. 
+* Maximum amount of time, in seconds, a replicated hot bucket can be idle after which we won't
+  apply indextime_lag.
 * This applies to only idle replicated hot buckets. As soon as new events start flowing
   in we will revert to the default behavior of applying indextime_lag
 * Defaults to 3600 seconds
@@ -1595,9 +1595,9 @@ maxopenevents = <integer>
 [inputproc]
 
 max_fd = <integer>
-* Maximum number of file descriptors that a ingestion pipeline in Khulnasoft will keep open, 
+* Maximum number of file descriptors that a ingestion pipeline in Khulnasoft will keep open,
   to capture any trailing data from files that are written to very slowly.
-* Note that this limit will be applied per ingestion pipeline. For more information 
+* Note that this limit will be applied per ingestion pipeline. For more information
   about multiple ingestion pipelines see parallelIngestionPipelines in the
   server.conf.spec file.
 * With N parallel ingestion pipelines the maximum number of file descriptors that
@@ -2059,8 +2059,8 @@ maxcount = <integer>
 bucket_localize_max_lookahead = <int>
 * This setting is only relevant when using remote storage.
 * Specifies the maximum number of buckets the metadata command localizes
-  for look-ahead purposes, in addition to the required bucket. 
-* Increasing this value can improve performance, at the cost of additional 
+  for look-ahead purposes, in addition to the required bucket.
+* Increasing this value can improve performance, at the cost of additional
   network/io/disk utilization.
 * Valid values are 0-64. Any value larger than 64 will be set to 64. Other
   invalid values will be discarded and the default will be substituted.
@@ -2138,15 +2138,15 @@ maxzoomlevel = <integer>
 * Controls the number of zoom levels that geostats will cluster events on
 
 zl_0_gridcell_latspan = <float>
-* Controls what is the grid spacing in terms of latitude degrees at the lowest zoom 
+* Controls what is the grid spacing in terms of latitude degrees at the lowest zoom
   level, which is zoom-level 0.
-* Grid-spacing at other zoom levels are auto created from this value by reducing by a 
+* Grid-spacing at other zoom levels are auto created from this value by reducing by a
   factor of 2 at each zoom-level.
 
 zl_0_gridcell_longspan = <float>
-* Controls what is the grid spacing in terms of longitude degrees at the lowest zoom 
+* Controls what is the grid spacing in terms of longitude degrees at the lowest zoom
   level, which is zoom-level 0
-* Grid-spacing at other zoom levels are auto created from this value by reducing by a 
+* Grid-spacing at other zoom levels are auto created from this value by reducing by a
   factor of 2 at each zoom-level.
 
 filterstrategy = <integer>
@@ -2214,9 +2214,9 @@ chunk_size = <unsigned int>
 
 warn_on_missing_summaries = <boolean>
 * ADVANCED: Only meant for debugging summariesonly=true searches on accelerated datamodels.
-* When true, search will issue a warning for a tstats summariesonly=true search for 
+* When true, search will issue a warning for a tstats summariesonly=true search for
   the following scenarios:
-    a) If there is a non-hot bucket that has no corresponding datamodel acceleration 
+    a) If there is a non-hot bucket that has no corresponding datamodel acceleration
        summary whatsoever.
     b) If the bucket's summary does not match with the current datamodel acceleration search.
 * Defaults to false
@@ -2312,11 +2312,11 @@ max_number_of_acked_requests_pending_query_per_ack_channel = 1000000
 * Settings for the heuristic that will detect and disconnect slow peers towards
   the end of a search that has returned a large volume of data
 
-disabled = <boolean> 
-* is this feature enabled. 
+disabled = <boolean>
+* is this feature enabled.
 * Defaults to true
 
-batch_search_activation_fraction = <double>  
+batch_search_activation_fraction = <double>
 * The fraction of peers that must have completed before we start disconnecting
 * This is only applicable to batch search because the slow peers will not hold
   back the fast peers.
@@ -2327,8 +2327,8 @@ packets_per_data_point = <unsigned int>
 * Defaults to 500
 
 sensitivity = <double>
-* Sensitivity of the heuristic to newer values. For larger values of sensitivity 
-  the heuristic will give more weight to newer statistic.   
+* Sensitivity of the heuristic to newer values. For larger values of sensitivity
+  the heuristic will give more weight to newer statistic.
 * Defaults to 0.3
 
 grace_period_before_disconnect = <double>
@@ -2339,24 +2339,24 @@ grace_period_before_disconnect = <double>
 
 threshold_data_volume = <unsigned int>
 * The volume of uncompressed data that must have accumulated in KB from
-  a peer before we consider them in the heuristic. 
+  a peer before we consider them in the heuristic.
 * Defaults to 1024
 
 threshold_connection_life_time = <unsigned int>
 * All peers will be given an initial grace period of at least these many
-  seconds before we consider them in the heuristic. 
+  seconds before we consider them in the heuristic.
 * Defaults to 60
 
 bound_on_disconnect_threshold_as_fraction_of_mean = <double>
-* The maximum value of the threshold data rate we will use to determine if 
+* The maximum value of the threshold data rate we will use to determine if
   a peer is slow. The actual threshold will be computed dynamically at search
-  time but will never exceed (100*maximum_threshold_as_fraction_of_mean)% on 
-  either side of the mean. 
+  time but will never exceed (100*maximum_threshold_as_fraction_of_mean)% on
+  either side of the mean.
 * Defaults to 0.2
 
 [geomfilter]
 enable_generalization = <boolean>
-* Whether or not generalization is applied to polygon boundaries to reduce 
+* Whether or not generalization is applied to polygon boundaries to reduce
   point count for rendering
 * Defaults to true
 

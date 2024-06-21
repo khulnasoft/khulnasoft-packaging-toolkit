@@ -20,14 +20,14 @@ def argument_parser():
     # type: () -> SlimArgumentParser
 
     _parser = SlimArgumentParser(
-        description='describe an app and its dependencies',
-        epilog='This command assumes the app.manifest file is located at the root of the app source directory.'
+        description="describe an app and its dependencies",
+        epilog="This command assumes the app.manifest file is located at the root of the app source directory.",
     )
 
     _parser.add_app_source()
     _parser.add_argument_help()
     _parser.add_repository()
-    _parser.add_output_file(description='output of this command')
+    _parser.add_output_file(description="output of this command")
 
     return _parser
 
@@ -40,7 +40,7 @@ def main(args):
     source = args.source
 
     with args.output as output:
-        SlimLogger.step('Describing ' + encode_filename(source) + '...')
+        SlimLogger.step("Describing " + encode_filename(source) + "...")
         app_source = AppSource(source)
         SlimLogger.exit_on_error()
         app_source.print_description(output)
@@ -60,27 +60,27 @@ def describe(source, app_only):
     description = app_source.description
     SlimLogger.exit_on_error()
 
-    value = description['info']
+    value = description["info"]
     if value:
         payload.set_info(value)
 
-    value = description['dependencies']
+    value = description["dependencies"]
     if value:
         payload.set_dependencies(value)
 
-    value = description['input_groups']
+    value = description["input_groups"]
     if value:
         payload.set_input_groups(value)
 
-    value = description['supported_deployments']
+    value = description["supported_deployments"]
     if value:
         payload.set_supported_deployments(value)
 
-    value = description['schema_version']
+    value = description["schema_version"]
     if value:
         payload.set_schema_version(value)
 
-    value = description['generated']
+    value = description["generated"]
     if value:
         payload.set_generated(value)
 
@@ -89,16 +89,20 @@ def describe(source, app_only):
         # like AppSource
         # Possibility: Add AppSource.dependency_graph property and compute the property on demand
         # We could then also cache the AppDependencyGraph.description
-        app_dependency_graph = AppDependencyGraph(app_source, slim_configuration.repository_path)
+        app_dependency_graph = AppDependencyGraph(
+            app_source, slim_configuration.repository_path
+        )
         SlimLogger.exit_on_error()
-        slim_configuration.payload.set_dependency_graph(app_dependency_graph.description)
+        slim_configuration.payload.set_dependency_graph(
+            app_dependency_graph.description
+        )
 
     return description
 
 
 parser = argument_parser()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # noinspection PyBroadException
     try:
         main(parser.parse_args(sys.argv[1:]))

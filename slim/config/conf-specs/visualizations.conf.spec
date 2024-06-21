@@ -18,7 +18,7 @@
 
 [<stanza name>]
 * Create a unique stanza name for each visualization. It should match the name
-  of the visualization 
+  of the visualization
 * Follow the stanza name with any number of the following attribute/value
   pairs.
 * If you do not specify an attribute, Khulnasoft uses the default.

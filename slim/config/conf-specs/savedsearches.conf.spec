@@ -483,7 +483,7 @@ dispatch.rt_backfill = <bool>
 
 dispatch.indexedRealtime = <bool>
 * Specifies whether to use indexed-realtime mode when doing realtime searches.
-* Overrides the setting in the limits.conf file for the indexed_realtime_use_by_default 
+* Overrides the setting in the limits.conf file for the indexed_realtime_use_by_default
   attribute in the [realtime] stanza.
 * This setting applies to each job.
 * See the [realtime] stanza in the limits.conf.spec file for more information.
