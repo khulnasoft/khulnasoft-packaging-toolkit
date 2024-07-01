@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding=utf-8
-#
 # Copyright © KhulnaSoft, Ltd. All Rights Reserved.
 
 # pylint: disable=unused-import

@@ -1,5 +1,4 @@
 # coding=utf-8
-#
 # Copyright © KhulnaSoft, Ltd. All Rights Reserved.
 
 """ app_configuration_spec module
