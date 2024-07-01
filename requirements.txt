@@ -1,6 +1,6 @@
 cfgv==3.4.0
 distlib==0.3.8
-filelock==3.15.3
+filelock==3.15.4
 future==1.0.0
 identify==2.5.36
 nodeenv==1.9.1
